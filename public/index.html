@@ -1,504 +1,436 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+<!DOCTYPE html><html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <meta name="theme-color" content="#070707">
-  <meta name="description" content="ALIANCE R.H.S — Raven Hells System">
-
-  <title>ALIANCE R.H.S — Raven Hells System</title>
-
-  <link rel="icon" href="/logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/admin.css">
-</head>
-
-<body>
-
-  <!-- =========================
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  <meta name="theme-color" content="#050505">
+  <meta name="description" content="ALIANCE R.H.S — Raven Hells System. Uma aliança criada para conectar, fortalecer e construir.">  <title>ALIANCE R.H.S | Raven Hells System</title>  <link rel="icon" href="logo.svg" type="image/svg+xml">  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head><body>  <!-- =========================
        HEADER
-  ========================== -->
+       ========================= -->  <header class="site-header">
+    <div class="container">  <a href="index.html" class="brand">
+    <img src="logo.svg" alt="R.H.S">
+    <span>ALIANCE <strong>R.H.S</strong></span>
+  </a>
 
-  <header class="site-header">
+  <nav class="main-nav">
+    <a href="index.html" class="active">Início</a>
+    <a href="pages/sobre.html">Sobre</a>
+    <a href="pages/comunidade.html">Comunidade</a>
+    <a href="pages/estrutura.html">Estrutura</a>
+    <a href="pages/contato.html">Contato</a>
+  </nav>
 
-    <a href="/" class="site-brand">
-      <img src="/logo.svg" alt="ALIANCE R.H.S">
+  <button
+    class="mobile-menu-btn"
+    type="button"
+    data-mobile-menu
+    aria-label="Abrir menu"
+  >
+    ☰
+  </button>
 
-      <div class="brand-text">
-        <strong>ALIANCE R.H.S</strong>
-        <span>RAVEN HELLS SYSTEM</span>
-      </div>
-    </a>
+</div>
 
-    <nav class="main-nav">
-
-      <a href="#inicio" class="active">
-        Início
-      </a>
-
-      <a href="#sobre">
-        Sobre
-      </a>
-
-      <a href="#estrutura">
-        Estrutura
-      </a>
-
-      <a href="#comunidade">
-        Comunidade
-      </a>
-
-      <a href="/admin.html" class="nav-panel">
-        Painel
-      </a>
-
-    </nav>
-
-    <button
-      class="mobile-menu"
-      id="mobileMenu"
-      type="button"
-      aria-label="Abrir menu"
-    >
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-
-  </header>
-
-
-  <!-- =========================
+  </header>  <!-- =========================
        HERO
-  ========================== -->
+       ========================= -->  <main><section class="hero">
 
-  <main>
+  <div class="container">
 
-    <section
-      class="hero-section"
-      id="inicio"
-    >
+    <div class="hero-content">
 
-      <div class="hero-background"></div>
+      <span class="badge reveal">
+        RAVEN HELLS SYSTEM
+      </span>
 
-      <div class="hero-content">
+      <h1 class="reveal">
+        ALIANCE
+        <span class="text-red">R.H.S</span>
+      </h1>
 
-        <div class="status-line">
-          <span class="status-dot"></span>
-          SISTEMA OPERACIONAL
+      <p class="hero-description reveal">
+        Uma aliança criada para conectar pessoas, comunidades
+        e projetos em torno de uma única visão.
+      </p>
+
+      <div class="hero-actions reveal">
+
+        <a
+          href="pages/sobre.html"
+          class="rhs-button rhs-button-primary"
+        >
+          Conheça a R.H.S
+        </a>
+
+        <a
+          href="pages/comunidade.html"
+          class="rhs-button rhs-button-secondary"
+        >
+          Comunidade
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     SOBRE
+     ========================= -->
+
+<section class="section">
+
+  <div class="container">
+
+    <div class="section-heading reveal">
+
+      <span class="badge">
+        QUEM SOMOS
+      </span>
+
+      <h2>
+        Uma rede criada para
+        <span class="text-red">conectar.</span>
+      </h2>
+
+      <p>
+        A ALIANCE R.H.S nasceu da vontade de unir comunidades,
+        criadores e projetos em uma estrutura organizada,
+        colaborativa e forte.
+      </p>
+
+    </div>
+
+
+    <div class="grid grid-3">
+
+      <article class="rhs-card reveal">
+
+        <div class="rhs-icon">
+          01
         </div>
 
-        <h1>
-          ALIANCE
-          <span>R.H.S</span>
-        </h1>
+        <span class="badge">
+          CONECTAR
+        </span>
 
-        <div class="hero-subtitle">
-          RAVEN HELLS SYSTEM
-        </div>
+        <h3 class="rhs-card-title">
+          Aproximar
+        </h3>
 
-        <p class="hero-description">
-          Uma estrutura criada para conectar comunidades,
-          projetos e pessoas em um único ambiente.
-          Presença, organização e identidade.
+        <p class="rhs-card-description">
+          Criamos conexões entre pessoas, comunidades e
+          diferentes projetos.
         </p>
 
-        <div class="hero-buttons">
+      </article>
 
-          <a
-            href="#sobre"
-            class="button button-primary"
-          >
-            CONHECER A R.H.S
-          </a>
 
-          <a
-            href="/admin.html"
-            class="button button-secondary"
-          >
-            ACESSAR PAINEL
-          </a>
+      <article class="rhs-card reveal">
 
+        <div class="rhs-icon">
+          02
         </div>
 
-        <div class="hero-information">
-
-          <div>
-            <strong>01</strong>
-            <span>IDENTIDADE</span>
-          </div>
-
-          <div>
-            <strong>02</strong>
-            <span>ESTRUTURA</span>
-          </div>
-
-          <div>
-            <strong>03</strong>
-            <span>COMUNIDADE</span>
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <!-- Símbolo visual -->
-
-      <div class="hero-symbol">
-
-        <div class="symbol-circle circle-one"></div>
-
-        <div class="symbol-circle circle-two"></div>
-
-        <div class="symbol-circle circle-three"></div>
-
-        <div class="symbol-center">
-
-          <span>R</span>
-
-          <small>
-            H.S
-          </small>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         SOBRE
-    ========================== -->
-
-    <section
-      class="content-section"
-      id="sobre"
-    >
-
-      <div class="section-heading">
-
-        <span class="section-number">
-          01
+        <span class="badge">
+          FORTALECER
         </span>
+
+        <h3 class="rhs-card-title">
+          Crescer juntos
+        </h3>
+
+        <p class="rhs-card-description">
+          Uma rede colaborativa onde cada projeto pode
+          evoluir e contribuir.
+        </p>
+
+      </article>
+
+
+      <article class="rhs-card reveal">
+
+        <div class="rhs-icon">
+          03
+        </div>
+
+        <span class="badge">
+          CONSTRUIR
+        </span>
+
+        <h3 class="rhs-card-title">
+          Algo maior
+        </h3>
+
+        <p class="rhs-card-description">
+          Transformamos união e organização em uma estrutura
+          preparada para o futuro.
+        </p>
+
+      </article>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     IDENTIDADE
+     ========================= -->
+
+<section class="section">
+
+  <div class="container">
+
+    <div class="rhs-card reveal">
+
+      <div class="rhs-card-header">
 
         <div>
 
-          <span class="section-label">
-            IDENTIDADE
+          <span class="badge">
+            NOSSA IDENTIDADE
           </span>
 
-          <h2>
-            Mais que um nome.
+          <h2 class="rhs-card-title">
+            Raven Hells System
           </h2>
 
         </div>
 
       </div>
 
-
-      <div class="about-grid">
-
-        <article class="about-card featured">
-
-          <div class="card-number">
-            R.H.S
-          </div>
-
-          <h3>
-            Uma identidade própria
-          </h3>
-
-          <p>
-            A ALIANCE R.H.S possui uma identidade
-            construída para representar uma estrutura
-            forte, organizada e preparada para evoluir.
-          </p>
-
-        </article>
-
-
-        <article class="about-card">
-
-          <div class="card-number">
-            01
-          </div>
-
-          <h3>
-            Conexão
-          </h3>
-
-          <p>
-            Um ambiente pensado para aproximar
-            comunidades e projetos através de uma
-            estrutura simples e organizada.
-          </p>
-
-        </article>
-
-
-        <article class="about-card">
-
-          <div class="card-number">
-            02
-          </div>
-
-          <h3>
-            Organização
-          </h3>
-
-          <p>
-            Informações, recursos e ferramentas
-            centralizados para facilitar a administração
-            da R.H.S.
-          </p>
-
-        </article>
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         ESTRUTURA
-    ========================== -->
-
-    <section
-      class="structure-section"
-      id="estrutura"
-    >
-
-      <div class="content-section">
-
-        <div class="section-heading">
-
-          <span class="section-number">
-            02
-          </span>
-
-          <div>
-
-            <span class="section-label">
-              ESTRUTURA
-            </span>
-
-            <h2>
-              Construída para evoluir.
-            </h2>
-
-          </div>
-
-        </div>
-
-
-        <div class="structure-grid">
-
-          <article class="structure-card">
-
-            <span class="structure-index">
-              01
-            </span>
-
-            <div class="structure-icon">
-              ◈
-            </div>
-
-            <h3>
-              Painel administrativo
-            </h3>
-
-            <p>
-              Área protegida para administração
-              e gerenciamento do sistema.
-            </p>
-
-            <a href="/admin.html">
-              Abrir painel
-              <span>→</span>
-            </a>
-
-          </article>
-
-
-          <article class="structure-card">
-
-            <span class="structure-index">
-              02
-            </span>
-
-            <div class="structure-icon">
-              ◉
-            </div>
-
-            <h3>
-              Comunidade
-            </h3>
-
-            <p>
-              Uma base preparada para integrar
-              recursos e conexões da R.H.S.
-            </p>
-
-            <a href="#comunidade">
-              Ver comunidade
-              <span>→</span>
-            </a>
-
-          </article>
-
-
-          <article class="structure-card">
-
-            <span class="structure-index">
-              03
-            </span>
-
-            <div class="structure-icon">
-              ◆
-            </div>
-
-            <h3>
-              Performance
-            </h3>
-
-            <p>
-              Estrutura leve, responsiva e hospedada
-              sobre a infraestrutura da Cloudflare.
-            </p>
-
-            <a href="#status">
-              Ver status
-              <span>→</span>
-            </a>
-
-          </article>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         COMUNIDADE
-    ========================== -->
-
-    <section
-      class="content-section community-section"
-      id="comunidade"
-    >
-
-      <div class="community-content">
-
-        <div class="status-line">
-          <span class="status-dot"></span>
-          ALIANCE R.H.S
-        </div>
-
-        <h2>
-          Conecte.
-          <br>
-          Fortaleça.
-          <br>
-          <span>Construa.</span>
-        </h2>
-
-        <p>
-          A cada ação tem sua reação.
-        </p>
-
-      </div>
-
-
-      <div
-        class="system-status"
-        id="status"
-      >
-
-        <div class="status-header">
-          STATUS DO SISTEMA
-        </div>
-
-        <div class="status-main">
-
-          <span class="online-dot"></span>
-
-          <strong>
-            ONLINE
-          </strong>
-
-        </div>
-
-        <div class="status-detail">
-          ALIANCE R.H.S
-        </div>
-
-        <div class="status-detail">
-          RAVEN HELLS SYSTEM
-        </div>
-
-        <div class="status-line-bottom">
-          INFRAESTRUTURA CLOUDFLARE
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         FRASE FINAL
-    ========================== -->
-
-    <section class="final-section">
-
-      <div class="final-line"></div>
-
-      <p>
-        A CADA AÇÃO TEM SUA REAÇÃO
+      <p class="rhs-card-description">
+        A R.H.S representa uma estrutura baseada em união,
+        organização e colaboração. Cada conexão fortalece
+        a aliança e cada projeto contribui para construir
+        algo maior.
       </p>
 
-      <div class="final-line"></div>
+      <div class="divider"></div>
 
-    </section>
-
-  </main>
-
-
-  <!-- =========================
-       FOOTER
-  ========================== -->
-
-  <footer class="site-footer">
-
-    <div>
-
-      <strong>
-        ALIANCE R.H.S
+      <strong class="text-red">
+        A cada ação tem sua reação.
       </strong>
 
-      <span>
-        RAVEN HELLS SYSTEM
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     ESTRUTURA
+     ========================= -->
+
+<section class="section">
+
+  <div class="container">
+
+    <div class="section-heading reveal">
+
+      <span class="badge">
+        ESTRUTURA
       </span>
 
+      <h2>
+        Organização que
+        <span class="text-red">faz diferença.</span>
+      </h2>
+
     </div>
 
-    <div>
-      © <span id="currentYear"></span>
+
+    <div class="grid grid-2">
+
+      <article class="rhs-card reveal">
+
+        <div class="rhs-icon">
+          R
+        </div>
+
+        <h3 class="rhs-card-title">
+          Administração
+        </h3>
+
+        <p class="rhs-card-description">
+          Organização geral, decisões e gerenciamento
+          da estrutura R.H.S.
+        </p>
+
+      </article>
+
+
+      <article class="rhs-card reveal">
+
+        <div class="rhs-icon">
+          +
+        </div>
+
+        <h3 class="rhs-card-title">
+          Comunidades
+        </h3>
+
+        <p class="rhs-card-description">
+          Conexão entre comunidades e projetos que
+          fazem parte da aliança.
+        </p>
+
+      </article>
+
+    </div>
+
+
+    <div class="section-actions reveal">
+
+      <a
+        href="pages/estrutura.html"
+        class="rhs-button rhs-button-primary"
+      >
+        Ver estrutura completa
+      </a>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     COMUNIDADE
+     ========================= -->
+
+<section class="section">
+
+  <div class="container">
+
+    <div class="rhs-card reveal">
+
+      <span class="badge">
+        COMUNIDADE R.H.S
+      </span>
+
+      <h2 class="rhs-card-title">
+        Faça parte da aliança.
+      </h2>
+
+      <p class="rhs-card-description">
+        Descubra nossas comunidades, acompanhe os projetos
+        e fique conectado com as novidades da ALIANCE R.H.S.
+      </p>
+
+      <div class="hero-actions">
+
+        <a
+          href="pages/comunidade.html"
+          class="rhs-button rhs-button-primary"
+        >
+          Acessar comunidade
+        </a>
+
+        <a
+          href="pages/contato.html"
+          class="rhs-button rhs-button-secondary"
+        >
+          Entrar em contato
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     FRASE FINAL
+     ========================= -->
+
+<section class="section">
+
+  <div class="container">
+
+    <div class="section-heading reveal">
+
+      <span class="badge">
+        ALIANCE R.H.S
+      </span>
+
+      <h2>
+        Nascemos para conectar.
+        <span class="text-red">
+          Crescemos para fortalecer.
+        </span>
+      </h2>
+
+      <p>
+        Permanecemos para construir algo maior — juntos.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+  </main>  <!-- =========================
+       FOOTER
+       ========================= -->  <footer class="site-footer"><div class="container">
+
+  <div>
+
+    <strong>
       ALIANCE R.H.S
-    </div>
+    </strong>
 
-    <div>
-      A cada ação tem sua reação.
-    </div>
+    <p>
+      Raven Hells System
+    </p>
 
-  </footer>
+  </div>
 
 
-  <script src="/admin.js"></script>
+  <nav>
 
-</body>
+    <a href="pages/sobre.html">
+      Sobre
+    </a>
+
+    <a href="pages/comunidade.html">
+      Comunidade
+    </a>
+
+    <a href="pages/estrutura.html">
+      Estrutura
+    </a>
+
+    <a href="pages/contato.html">
+      Contato
+    </a>
+
+  </nav>
+
+
+  <p>
+    © <span data-year></span>
+    ALIANCE R.H.S. Todos os direitos reservados.
+  </p>
+
+</div>
+
+  </footer>  <!-- =========================
+       SCRIPTS
+       ========================= -->  <script src="js/main.js"></script>  <script src="js/navigation.js"></script>  <script src="js/animations.js"></script></body>
 </html>
