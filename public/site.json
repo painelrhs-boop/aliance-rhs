@@ -1,0 +1,26 @@
+{
+  "name": "ALIANCE R.H.S",
+  "shortName": "R.H.S",
+  "title": "ALIANCE R.H.S — Raven Hells System",
+  "description": "ALIANCE R.H.S — Raven Hells System. Uma aliança criada para conectar, fortalecer e construir.",
+  "version": "1.0.0",
+  "status": "online",
+  "theme": {
+    "primary": "#d60000",
+    "secondary": "#070707",
+    "background": "#070707",
+    "text": "#ffffff"
+  },
+  "branding": {
+    "logo": "/logo.svg",
+    "name": "ALIANCE R.H.S",
+    "subtitle": "RAVEN HELLS SYSTEM",
+    "slogan": "A cada ação tem sua reação."
+  },
+  "admin": {
+    "enabled": true,
+    "loginEndpoint": "/api/admin/login",
+    "sessionEndpoint": "/api/admin/session",
+    "logoutEndpoint": "/api/admin/logout"
+  }
+}
