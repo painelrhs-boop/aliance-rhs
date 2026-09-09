@@ -1,43 +1,51 @@
 {
   "name": "ALIANCE R.H.S",
-  "shortName": "R.H.S",
-  "title": "ALIANCE R.H.S — Raven Hells System",
-  "description": "ALIANCE R.H.S nasceu para conectar comunidades, projetos e pessoas em uma estrutura forte e organizada.",
+  "fullName": "Raven Hells System",
+  "description": "Uma aliança criada para conectar comunidades, projetos e pessoas em torno de uma mesma visão.",
+  "slogan": "A cada ação tem sua reação",
   "version": "1.0.0",
-  "status": "online",
-  "branding": {
-    "logo": "/logo.svg",
-    "name": "ALIANCE R.H.S",
-    "subtitle": "RAVEN HELLS SYSTEM",
-    "slogan": "A cada ação tem sua reação."
-  },
+  "language": "pt-BR",
   "theme": {
-    "primary": "#d40000",
-    "secondary": "#080808",
+    "primary": "#e50914",
     "background": "#050505",
     "surface": "#0d0d0d",
-    "text": "#ffffff",
-    "muted": "#9b9b9b"
+    "text": "#ffffff"
   },
-  "navigation": {
-    "home": "/",
-    "admin": "/admin.html"
-  },
-  "api": {
-    "adminLogin": "/api/admin/login",
-    "adminLogout": "/api/admin/logout",
-    "adminSession": "/api/admin/session",
-    "adminHistory": "/api/admin/history",
-    "communityResolve": "/api/community/resolve"
-  },
-  "admin": {
-    "enabled": true,
-    "loginRequired": true,
-    "sessionCookie": "rhs_session"
-  },
+  "navigation": [
+    {
+      "label": "Início",
+      "url": "/"
+    },
+    {
+      "label": "Sobre",
+      "url": "/pages/sobre.html"
+    },
+    {
+      "label": "Comunidade",
+      "url": "/pages/comunidade.html"
+    },
+    {
+      "label": "Estrutura",
+      "url": "/pages/estrutura.html"
+    },
+    {
+      "label": "Contato",
+      "url": "/pages/contato.html"
+    }
+  ],
   "community": {
-    "name": "ALIANCE R.H.S",
-    "slogan": "A cada ação tem sua reação.",
-    "status": "online"
+    "name": "Comunidade R.H.S",
+    "enabled": true
+  },
+  "administration": {
+    "name": "Administração R.H.S",
+    "owners": [
+      "Hass",
+      "Raizel"
+    ]
+  },
+  "footer": {
+    "copyright": "ALIANCE R.H.S",
+    "phrase": "Raven Hells System"
   }
 }
