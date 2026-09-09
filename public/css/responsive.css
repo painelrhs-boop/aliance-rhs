@@ -1,0 +1,273 @@
+/* =========================================================
+   ALIANCE R.H.S — RESPONSIVE
+   Raven Hells System
+   ========================================================= */
+
+@media (max-width: 1100px) {
+  .container {
+    width: min(100% - 36px, 1120px);
+  }
+
+  .hero {
+    min-height: 650px;
+  }
+
+  .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* =========================================================
+   TABLETS
+   ========================================================= */
+
+@media (max-width: 850px) {
+  .container {
+    width: min(100% - 30px, 720px);
+  }
+
+  .header-nav {
+    display: none;
+  }
+
+  .mobile-menu-btn {
+    display: flex;
+  }
+
+  .hero {
+    min-height: 620px;
+    text-align: center;
+  }
+
+  .hero-content {
+    margin-inline: auto;
+  }
+
+  .hero-actions {
+    justify-content: center;
+  }
+
+  .hero-description {
+    margin-inline: auto;
+  }
+
+  .section {
+    padding: 75px 0;
+  }
+
+  .grid-2,
+  .grid-3,
+  .grid-4 {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .content-row {
+    flex-wrap: wrap;
+  }
+}
+
+/* =========================================================
+   CELULAR
+   ========================================================= */
+
+@media (max-width: 620px) {
+  html {
+    font-size: 15px;
+  }
+
+  .container {
+    width: min(100% - 24px, 560px);
+  }
+
+  .section {
+    padding: 58px 0;
+  }
+
+  .hero {
+    min-height: 570px;
+    padding: 90px 0 60px;
+  }
+
+  .hero h1 {
+    font-size: clamp(38px, 12vw, 58px);
+    letter-spacing: -2px;
+  }
+
+  .hero-description {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .hero-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .hero-actions .btn,
+  .hero-actions .rhs-button {
+    width: 100%;
+  }
+
+  .section-title {
+    font-size: 30px;
+  }
+
+  .rhs-title {
+    font-size: 31px;
+  }
+
+  .grid-2,
+  .grid-3,
+  .grid-4 {
+    grid-template-columns: 1fr;
+  }
+
+  .rhs-card {
+    padding: 18px;
+  }
+
+  .stat-card {
+    min-height: 130px;
+  }
+
+  .stat-value {
+    font-size: 34px;
+  }
+
+  .card-header {
+    align-items: flex-start;
+  }
+
+  .content-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .content-row > * {
+    max-width: 100%;
+  }
+
+  .profile-row {
+    gap: 10px;
+  }
+
+  .rhs-avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .timeline-item {
+    gap: 12px;
+  }
+
+  .timeline::before {
+    left: 17px;
+  }
+
+  .timeline-dot {
+    width: 35px;
+    height: 35px;
+  }
+
+  .panel-body {
+    padding: 15px;
+  }
+
+  .panel-header {
+    padding: 15px;
+  }
+}
+
+/* =========================================================
+   CELULARES PEQUENOS
+   ========================================================= */
+
+@media (max-width: 400px) {
+  .container {
+    width: min(100% - 18px, 380px);
+  }
+
+  .hero {
+    padding-top: 80px;
+  }
+
+  .hero h1 {
+    font-size: 36px;
+  }
+
+  .rhs-title {
+    font-size: 28px;
+  }
+
+  .rhs-subtitle {
+    font-size: 13px;
+  }
+
+  .rhs-card {
+    border-radius: 14px;
+    padding: 16px;
+  }
+
+  .rhs-icon {
+    width: 42px;
+    height: 42px;
+  }
+
+  .rhs-button {
+    min-height: 44px;
+    padding: 0 15px;
+  }
+}
+
+/* =========================================================
+   TOUCH
+   ========================================================= */
+
+@media (hover: none) and (pointer: coarse) {
+  .rhs-card:hover,
+  .hover-lift:hover,
+  .hover-scale:hover,
+  .hover-rotate:hover {
+    transform: none;
+  }
+
+  .rhs-button:hover {
+    transform: none;
+  }
+}
+
+/* =========================================================
+   LANDSCAPE MOBILE
+   ========================================================= */
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero {
+    min-height: 520px;
+  }
+
+  .section {
+    padding: 50px 0;
+  }
+}
+
+/* =========================================================
+   ACESSIBILIDADE
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+  }
