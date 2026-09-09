@@ -1,5 +1,147 @@
-<!doctype html>
-<html>
-<head><title>ALIANCE R.H.S</title></head>
-<body><h1>ALIANCE R.H.S</h1></body>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="ALIANCE R.H.S — Raven Hells System"
+  >
+
+  <title>ALIANCE R.H.S</title>
+
+  <link rel="icon" href="/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/admin.css">
+</head>
+
+<body>
+
+  <div class="login-page">
+
+    <main class="login-box">
+
+      <img
+        src="/logo.svg"
+        alt="ALIANCE R.H.S"
+        class="login-logo"
+      >
+
+      <h1 class="login-title">
+        ALIANCE R.H.S
+      </h1>
+
+      <p class="login-description">
+        RAVEN HELLS SYSTEM
+      </p>
+
+      <div class="alert alert-success">
+        Sistema online.
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">
+          Bem-vindo
+        </h2>
+
+        <p class="section-description">
+          Acesso oficial ao sistema ALIANCE R.H.S.
+        </p>
+      </div>
+
+      <div class="grid grid-2">
+
+        <a
+          href="/admin"
+          class="btn btn-primary"
+        >
+          Painel Administrativo
+        </a>
+
+        <button
+          type="button"
+          class="btn btn-ghost"
+          onclick="showSystemInfo()"
+        >
+          Informações
+        </button>
+
+      </div>
+
+      <div
+        id="system-info"
+        class="panel"
+        style="display:none; margin-top:20px;"
+      >
+
+        <div class="panel-header">
+          <span class="panel-title">
+            ALIANCE R.H.S
+          </span>
+        </div>
+
+        <div class="panel-body">
+
+          <p class="text-muted">
+            Raven Hells System
+          </p>
+
+          <p
+            class="text-red"
+            style="margin-top:8px;"
+          >
+            A cada ação tem sua reação.
+          </p>
+
+          <p
+            class="text-muted"
+            style="margin-top:12px;"
+          >
+            Status:
+            <strong style="color:#20c878;">
+              ONLINE
+            </strong>
+          </p>
+
+        </div>
+
+      </div>
+
+      <p
+        class="text-muted"
+        style="
+          text-align:center;
+          margin-top:25px;
+          font-size:10px;
+        "
+      >
+        © <span class="current-year"></span>
+        ALIANCE R.H.S
+      </p>
+
+    </main>
+
+  </div>
+
+  <script src="/admin.js"></script>
+
+  <script>
+    function showSystemInfo() {
+      const box = document.getElementById("system-info");
+
+      if (!box) return;
+
+      if (box.style.display === "none") {
+        box.style.display = "block";
+      } else {
+        box.style.display = "none";
+      }
+    }
+  </script>
+
+</body>
 </html>
