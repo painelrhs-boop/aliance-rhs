@@ -1,15 +1,30 @@
+/* =========================================================
+   ALIANCE R.H.S
+   RAVEN HELLS SYSTEM
+   JAVASCRIPT PRINCIPAL
+========================================================= */
+
 (() => {
   "use strict";
 
-  const $ = (selector, root = document) => root.querySelector(selector);
-  const $$ = (selector, root = document) =>
-    Array.from(root.querySelectorAll(selector));
 
-  /* =========================
+  /* =======================================================
+     HELPERS
+  ======================================================= */
+
+  const $ = (selector, parent = document) =>
+    parent.querySelector(selector);
+
+  const $$ = (selector, parent = document) =>
+    [...parent.querySelectorAll(selector)];
+
+
+  /* =======================================================
      TOAST
-  ========================= */
+  ======================================================= */
 
-  function showToast(message, type = "success") {
+  function showToast(message, type = "normal") {
+
     let toast = $(".toast");
 
     if (!toast) {
@@ -19,286 +34,1158 @@
     }
 
     toast.textContent = message;
-    toast.className = `toast ${type}`;
 
-    clearTimeout(window.__rhsToastTimer);
+    toast.dataset.type = type;
 
-    window.__rhsToastTimer = setTimeout(() => {
-      toast.remove();
-    }, 3500);
+    toast.classList.add("show");
+
+    clearTimeout(toast._timer);
+
+    toast._timer = setTimeout(() => {
+      toast.classList.remove("show");
+    }, 3200);
   }
 
-  window.showToast = showToast;
 
-  /* =========================
-     MODAL
-  ========================= */
+  window.RHS = {
+    showToast
+  };
 
-  function openModal(id) {
-    const modal = typeof id === "string" ? document.getElementById(id) : id;
 
-    if (!modal) return;
+  /* =======================================================
+     ANO AUTOMÁTICO
+  ======================================================= */
 
-    modal.classList.add("open");
-    modal.classList.add("active");
+  const year = $("#currentYear");
+
+  if (year) {
+    year.textContent = new Date().getFullYear();
   }
 
-  function closeModal(id) {
-    const modal = typeof id === "string" ? document.getElementById(id) : id;
 
-    if (!modal) return;
+  /* =======================================================
+     MENU MOBILE
+  ======================================================= */
 
-    modal.classList.remove("open");
-    modal.classList.remove("active");
-  }
+  const mobileMenu = $("#mobileMenu");
+  const mainNav = $(".main-nav");
 
-  window.openModal = openModal;
-  window.closeModal = closeModal;
+  if (mobileMenu && mainNav) {
 
-  $$(".modal-close").forEach((button) => {
-    button.addEventListener("click", () => {
-      closeModal(button.closest(".modal"));
+    mobileMenu.addEventListener("click", () => {
+
+      mainNav.classList.toggle("open");
+
+      mobileMenu.classList.toggle("open");
+
     });
-  });
 
-  $$(".modal").forEach((modal) => {
-    modal.addEventListener("click", (event) => {
-      if (event.target === modal) {
-        closeModal(modal);
-      }
-    });
-  });
 
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      $$(".modal.open, .modal.active").forEach(closeModal);
-    }
-  });
+    $$(".main-nav a").forEach(link => {
 
-  /* =========================
-     MENU
-  ========================= */
-
-  $$(".nav-link").forEach((link) => {
-    link.addEventListener("click", () => {
-      $$(".nav-link").forEach((item) => {
-        item.classList.remove("active");
+      link.addEventListener("click", () => {
+        mainNav.classList.remove("open");
+        mobileMenu.classList.remove("open");
       });
 
-      link.classList.add("active");
     });
-  });
 
-  /* =========================
-     BOTÕES DE LOGOUT
-  ========================= */
-
-  $$("[data-logout]").forEach((button) => {
-    button.addEventListener("click", async () => {
-      try {
-        await fetch("/api/admin/logout", {
-          method: "POST",
-          credentials: "include"
-        });
-      } catch (_) {
-        // Continua mesmo se a requisição falhar.
-      }
-
-      window.location.href = "/admin";
-    });
-  });
-
-  /* =========================
-     FORMULÁRIO DE LOGIN
-  ========================= */
-
-  const loginForm =
-    $("#admin-login-form") ||
-    $("#login-form") ||
-    $("form[data-login]");
-
-  if (loginForm) {
-    loginForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
-
-      const button =
-        $("button[type='submit']", loginForm);
-
-      const originalText = button ? button.textContent : "";
-
-      if (button) {
-        button.disabled = true;
-        button.textContent = "ENTRANDO...";
-      }
-
-      const formData = new FormData(loginForm);
-
-      const email =
-        formData.get("email") ||
-        formData.get("username");
-
-      const password = formData.get("password");
-
-      try {
-        const response = await fetch("/api/admin/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            email,
-            password
-          })
-        });
-
-        let data = {};
-
-        try {
-          data = await response.json();
-        } catch (_) {}
-
-        if (!response.ok) {
-          throw new Error(
-            data.message ||
-            data.error ||
-            "E-mail ou senha inválidos."
-          );
-        }
-
-        showToast("Login realizado com sucesso.");
-
-        setTimeout(() => {
-          window.location.href = "/admin";
-        }, 500);
-
-      } catch (error) {
-        showToast(
-          error.message || "Não foi possível entrar.",
-          "error"
-        );
-
-      } finally {
-        if (button) {
-          button.disabled = false;
-          button.textContent = originalText;
-        }
-      }
-    });
   }
 
-  /* =========================
-     VERIFICAÇÃO DA SESSÃO
-  ========================= */
 
-  async function checkAdminSession() {
+  /* =======================================================
+     NAVEGAÇÃO ATIVA
+  ======================================================= */
+
+  const navigationLinks = $$(".main-nav a");
+
+  const sections = $$("main section[id]");
+
+  if (navigationLinks.length && sections.length) {
+
+    const updateActiveNavigation = () => {
+
+      const scrollPosition =
+        window.scrollY + 180;
+
+      let currentSection = "";
+
+      sections.forEach(section => {
+
+        const top = section.offsetTop;
+        const bottom =
+          top + section.offsetHeight;
+
+        if (
+          scrollPosition >= top &&
+          scrollPosition < bottom
+        ) {
+          currentSection = section.id;
+        }
+
+      });
+
+
+      navigationLinks.forEach(link => {
+
+        const href =
+          link.getAttribute("href");
+
+        link.classList.toggle(
+          "active",
+          href === `#${currentSection}`
+        );
+
+      });
+
+    };
+
+
+    window.addEventListener(
+      "scroll",
+      updateActiveNavigation,
+      { passive: true }
+    );
+
+    updateActiveNavigation();
+
+  }
+
+
+  /* =======================================================
+     LINKS COM SCROLL SUAVE
+  ======================================================= */
+
+  $$('a[href^="#"]').forEach(link => {
+
+    link.addEventListener("click", event => {
+
+      const targetId =
+        link.getAttribute("href");
+
+      if (
+        !targetId ||
+        targetId === "#"
+      ) {
+        return;
+      }
+
+      const target =
+        document.querySelector(targetId);
+
+      if (!target) {
+        return;
+      }
+
+      event.preventDefault();
+
+      target.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+
+    });
+
+  });
+
+
+  /* =======================================================
+     STATUS VISUAL
+  ======================================================= */
+
+  const statusDot = $(".online-dot");
+
+  if (statusDot) {
+
+    statusDot.setAttribute(
+      "title",
+      "Sistema operacional"
+    );
+
+  }
+
+
+  /* =======================================================
+     API HELPER
+  ======================================================= */
+
+  async function api(
+    url,
+    options = {}
+  ) {
+
+    const config = {
+      credentials: "same-origin",
+      ...options
+    };
+
+
+    config.headers = {
+      Accept: "application/json",
+      ...(options.headers || {})
+    };
+
+
+    if (
+      config.body &&
+      typeof config.body !== "string"
+    ) {
+
+      config.headers["Content-Type"] =
+        "application/json";
+
+      config.body =
+        JSON.stringify(config.body);
+
+    }
+
+
+    const response =
+      await fetch(url, config);
+
+
+    let data = null;
+
+    const contentType =
+      response.headers.get("content-type") || "";
+
+
+    if (
+      contentType.includes(
+        "application/json"
+      )
+    ) {
+
+      try {
+        data = await response.json();
+      } catch {
+        data = null;
+      }
+
+    } else {
+
+      try {
+        const text =
+          await response.text();
+
+        data = text
+          ? { message: text }
+          : null;
+
+      } catch {
+        data = null;
+      }
+
+    }
+
+
+    if (!response.ok) {
+
+      const error =
+        new Error(
+          data?.message ||
+          data?.error ||
+          `Erro HTTP ${response.status}`
+        );
+
+      error.status =
+        response.status;
+
+      error.data = data;
+
+      throw error;
+
+    }
+
+
+    return data;
+
+  }
+
+
+  window.RHS.api = api;
+
+
+  /* =======================================================
+     SESSÃO DO ADMIN
+  ======================================================= */
+
+  async function getAdminSession() {
+
+    return api(
+      "/api/admin/session",
+      {
+        method: "GET"
+      }
+    );
+
+  }
+
+
+  window.RHS.getAdminSession =
+    getAdminSession;
+
+
+  /* =======================================================
+     LOGOUT
+  ======================================================= */
+
+  async function logout() {
+
     try {
-      const response = await fetch(
-        "/api/admin/session",
+
+      await api(
+        "/api/admin/logout",
         {
-          method: "GET",
-          credentials: "include"
+          method: "POST"
         }
       );
 
-      if (!response.ok) {
-        return null;
-      }
+    } catch (error) {
 
-      const data = await response.json();
+      console.warn(
+        "Erro ao encerrar sessão:",
+        error
+      );
 
-      if (data && data.authenticated === false) {
-        return null;
-      }
+    } finally {
 
-      return data;
+      window.location.href =
+        "/admin.html";
 
-    } catch (_) {
-      return null;
     }
+
   }
 
-  window.checkAdminSession = checkAdminSession;
 
-  /* =========================
-     CARREGAR DADOS DO ADMIN
-  ========================= */
+  window.RHS.logout = logout;
 
-  async function loadAdminData() {
-    const session = await checkAdminSession();
 
-    if (!session) return null;
+  /* =======================================================
+     BOTÕES DE LOGOUT
+  ======================================================= */
+
+  $$("[data-logout], .logout-button, #logoutButton")
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        event => {
+
+          event.preventDefault();
+
+          logout();
+
+        }
+      );
+
+    });
+
+
+  /* =======================================================
+     LOGIN
+  ======================================================= */
+
+  const loginForm =
+    $("#loginForm");
+
+
+  if (loginForm) {
+
+    const loginButton =
+      loginForm.querySelector(
+        'button[type="submit"]'
+      );
+
+    const errorBox =
+      $("#loginError") ||
+      $(".login-error");
+
+
+    loginForm.addEventListener(
+      "submit",
+      async event => {
+
+        event.preventDefault();
+
+
+        const emailInput =
+          loginForm.querySelector(
+            '[name="email"]'
+          );
+
+        const passwordInput =
+          loginForm.querySelector(
+            '[name="password"]'
+          );
+
+
+        if (
+          !emailInput ||
+          !passwordInput
+        ) {
+
+          showToast(
+            "Campos de login não encontrados.",
+            "error"
+          );
+
+          return;
+
+        }
+
+
+        const email =
+          emailInput.value.trim();
+
+        const password =
+          passwordInput.value;
+
+
+        if (!email || !password) {
+
+          showLoginError(
+            "Preencha o e-mail e a senha."
+          );
+
+          return;
+
+        }
+
+
+        setLoginLoading(
+          true,
+          loginButton
+        );
+
+
+        hideLoginError(
+          errorBox
+        );
+
+
+        try {
+
+          await api(
+            "/api/admin/login",
+            {
+              method: "POST",
+
+              body: {
+                email,
+                password
+              }
+            }
+          );
+
+
+          showToast(
+            "Login realizado com sucesso."
+          );
+
+
+          setTimeout(() => {
+
+            window.location.href =
+              "/admin.html";
+
+          }, 350);
+
+
+        } catch (error) {
+
+          console.error(
+            "Falha no login:",
+            error
+          );
+
+
+          showLoginError(
+            getLoginErrorMessage(error)
+          );
+
+
+          setLoginLoading(
+            false,
+            loginButton
+          );
+
+        }
+
+      }
+    );
+
+
+    function showLoginError(message) {
+
+      if (!errorBox) {
+
+        showToast(
+          message,
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      errorBox.textContent =
+        message;
+
+      errorBox.classList.remove(
+        "hidden"
+      );
+
+    }
+
+
+    function hideLoginError(element) {
+
+      if (!element) {
+        return;
+      }
+
+      element.textContent = "";
+
+      element.classList.add(
+        "hidden"
+      );
+
+    }
+
+
+    function setLoginLoading(
+      loading,
+      button
+    ) {
+
+      if (!button) {
+        return;
+      }
+
+
+      if (loading) {
+
+        button.disabled = true;
+
+        button.dataset.originalText =
+          button.textContent;
+
+        button.textContent =
+          "ENTRANDO...";
+
+      } else {
+
+        button.disabled = false;
+
+        button.textContent =
+          button.dataset.originalText ||
+          "ENTRAR";
+
+      }
+
+    }
+
+
+    function getLoginErrorMessage(
+      error
+    ) {
+
+      if (
+        error?.status === 401
+      ) {
+
+        return "E-mail ou senha incorretos.";
+
+      }
+
+
+      if (
+        error?.status === 429
+      ) {
+
+        return "Muitas tentativas. Aguarde um pouco.";
+
+      }
+
+
+      if (
+        error?.message
+      ) {
+
+        return error.message;
+
+      }
+
+
+      return "Não foi possível entrar. Tente novamente.";
+
+    }
+
+  }
+
+
+  /* =======================================================
+     PROTEÇÃO DO PAINEL
+  ======================================================= */
+
+  const isAdminPage =
+    document.body.classList.contains(
+      "admin-page"
+    ) ||
+    location.pathname === "/admin.html";
+
+
+  if (isAdminPage) {
+
+    protectAdminPage();
+
+  }
+
+
+  async function protectAdminPage() {
+
+    try {
+
+      const session =
+        await getAdminSession();
+
+
+      const authenticated =
+        Boolean(
+          session?.authenticated ??
+          session?.loggedIn ??
+          session?.user ??
+          session?.admin
+        );
+
+
+      if (!authenticated) {
+
+        window.location.href =
+          "/admin.html";
+
+        return;
+
+      }
+
+
+      populateAdminUser(
+        session
+      );
+
+
+      document.documentElement
+        .classList.add(
+          "rhs-authenticated"
+        );
+
+
+    } catch (error) {
+
+      console.warn(
+        "Não foi possível verificar a sessão:",
+        error
+      );
+
+
+      if (
+        error?.status === 401 ||
+        error?.status === 403
+      ) {
+
+        window.location.href =
+          "/admin.html";
+
+      }
+
+    }
+
+  }
+
+
+  window.RHS.protectAdminPage =
+    protectAdminPage;
+
+
+  /* =======================================================
+     USUÁRIO LOGADO
+  ======================================================= */
+
+  function populateAdminUser(
+    session
+  ) {
 
     const user =
-      session.user ||
-      session.admin ||
+      session?.user ||
+      session?.admin ||
       session;
 
+
     const name =
-      user.name ||
-      user.username ||
-      user.email ||
+      user?.name ||
+      user?.username ||
+      user?.email ||
       "Administrador";
 
+
     const email =
-      user.email ||
+      user?.email ||
       "";
 
-    $$(".user-name").forEach((element) => {
-      element.textContent = name;
-    });
 
-    $$(".user-email").forEach((element) => {
-      element.textContent = email;
-    });
+    const role =
+      user?.role ||
+      user?.type ||
+      "ADMIN";
 
-    $$(".user-role").forEach((element) => {
-      element.textContent =
-        user.role ||
-        "ADMIN";
-    });
 
-    $$(".avatar").forEach((element) => {
-      const letters = name
-        .trim()
-        .split(/\s+/)
-        .slice(0, 2)
-        .map((part) => part[0])
-        .join("")
-        .toUpperCase();
+    $$(".user-name")
+      .forEach(element => {
 
-      element.textContent = letters || "RH";
-    });
+        element.textContent =
+          name;
 
-    return session;
+      });
+
+
+    $$(".user-email")
+      .forEach(element => {
+
+        element.textContent =
+          email;
+
+      });
+
+
+    $$(".user-role")
+      .forEach(element => {
+
+        element.textContent =
+          role;
+
+      });
+
+
+    $$(".avatar")
+      .forEach(element => {
+
+        const firstLetter =
+          String(name)
+            .trim()
+            .charAt(0)
+            .toUpperCase();
+
+        element.textContent =
+          firstLetter || "A";
+
+      });
+
   }
 
-  /* =========================
-     AUTO CARREGAMENTO
-  ========================= */
 
-  document.addEventListener("DOMContentLoaded", async () => {
-    await loadAdminData();
+  window.RHS.populateAdminUser =
+    populateAdminUser;
 
-    /* Ano automático */
-    $$(".current-year").forEach((element) => {
-      element.textContent =
-        new Date().getFullYear();
-    });
 
-    /* Botões com data-action */
-    $$("[data-action='logout']").forEach((button) => {
-      button.addEventListener("click", async () => {
-        try {
-          await fetch("/api/admin/logout", {
-            method: "POST",
-            credentials: "include"
-          });
-        } finally {
-          window.location.href = "/";
-        }
+  /* =======================================================
+     HISTÓRICO ADMINISTRATIVO
+  ======================================================= */
+
+  async function loadAdminHistory(
+    target
+  ) {
+
+    try {
+
+      const data =
+        await api(
+          "/api/admin/history",
+          {
+            method: "GET"
+          }
+        );
+
+
+      const history =
+        Array.isArray(data)
+          ? data
+          : (
+            data?.history ||
+            data?.items ||
+            data?.data ||
+            []
+          );
+
+
+      if (!target) {
+        return history;
+      }
+
+
+      target.innerHTML = "";
+
+
+      if (!history.length) {
+
+        target.innerHTML = `
+          <div class="text-muted">
+            Nenhum registro encontrado.
+          </div>
+        `;
+
+        return history;
+
+      }
+
+
+      history.forEach(item => {
+
+        const row =
+          document.createElement(
+            "div"
+          );
+
+
+        row.className =
+          "history-item";
+
+
+        const action =
+          item.action ||
+          item.event ||
+          item.type ||
+          "Ação administrativa";
+
+
+        const date =
+          item.createdAt ||
+          item.date ||
+          item.timestamp ||
+          "";
+
+
+        row.innerHTML = `
+          <strong>${escapeHtml(action)}</strong>
+          <span>${escapeHtml(formatDate(date))}</span>
+        `;
+
+
+        target.appendChild(row);
+
       });
-    });
+
+
+      return history;
+
+    } catch (error) {
+
+      console.error(
+        "Erro ao carregar histórico:",
+        error
+      );
+
+
+      if (target) {
+
+        target.innerHTML = `
+          <div class="text-muted">
+            Não foi possível carregar o histórico.
+          </div>
+        `;
+
+      }
+
+
+      return [];
+
+    }
+
+  }
+
+
+  window.RHS.loadAdminHistory =
+    loadAdminHistory;
+
+
+  /* =======================================================
+     FORMATADORES
+  ======================================================= */
+
+  function formatDate(value) {
+
+    if (!value) {
+      return "Data não informada";
+    }
+
+
+    const date =
+      new Date(value);
+
+
+    if (
+      Number.isNaN(
+        date.getTime()
+      )
+    ) {
+
+      return String(value);
+
+    }
+
+
+    return date.toLocaleString(
+      "pt-BR",
+      {
+        dateStyle: "short",
+        timeStyle: "short"
+      }
+    );
+
+  }
+
+
+  function escapeHtml(value) {
+
+    return String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+
+  }
+
+
+  /* =======================================================
+     MODAIS
+  ======================================================= */
+
+  function openModal(id) {
+
+    const modal =
+      typeof id === "string"
+        ? document.getElementById(id)
+        : id;
+
+
+    if (!modal) {
+      return;
+    }
+
+
+    modal.classList.add("open");
+
+    document.body.style.overflow =
+      "hidden";
+
+  }
+
+
+  function closeModal(id) {
+
+    const modal =
+      typeof id === "string"
+        ? document.getElementById(id)
+        : id;
+
+
+    if (!modal) {
+      return;
+    }
+
+
+    modal.classList.remove("open");
+
+    document.body.style.overflow =
+      "";
+
+  }
+
+
+  window.RHS.openModal =
+    openModal;
+
+  window.RHS.closeModal =
+    closeModal;
+
+
+  $$(".modal").forEach(modal => {
+
+    modal.addEventListener(
+      "click",
+      event => {
+
+        if (
+          event.target === modal
+        ) {
+
+          closeModal(modal);
+
+        }
+
+      }
+    );
+
   });
+
+
+  $$("[data-modal-open]")
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          openModal(
+            button.dataset.modalOpen
+          );
+
+        }
+      );
+
+    });
+
+
+  $$("[data-modal-close]")
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          const modal =
+            button.closest(".modal");
+
+          closeModal(modal);
+
+        }
+      );
+
+    });
+
+
+  /* =======================================================
+     ESC PARA FECHAR MODAL
+  ======================================================= */
+
+  document.addEventListener(
+    "keydown",
+    event => {
+
+      if (
+        event.key !== "Escape"
+      ) {
+        return;
+      }
+
+
+      const openedModal =
+        $(".modal.open");
+
+
+      if (openedModal) {
+
+        closeModal(
+          openedModal
+        );
+
+      }
+
+    }
+  );
+
+
+  /* =======================================================
+     MENU ADMIN MOBILE
+  ======================================================= */
+
+  const adminMenuButton =
+    $(
+      "#adminMenuButton, [data-admin-menu]"
+    );
+
+  const sidebar =
+    $(".sidebar");
+
+
+  if (
+    adminMenuButton &&
+    sidebar
+  ) {
+
+    adminMenuButton.addEventListener(
+      "click",
+      () => {
+
+        sidebar.classList.toggle(
+          "open"
+        );
+
+      }
+    );
+
+  }
+
+
+  /* =======================================================
+     FECHAR SIDEBAR AO CLICAR
+  ======================================================= */
+
+  $$(".sidebar .nav-link")
+    .forEach(link => {
+
+      link.addEventListener(
+        "click",
+        () => {
+
+          if (
+            window.innerWidth <= 760 &&
+            sidebar
+          ) {
+
+            sidebar.classList.remove(
+              "open"
+            );
+
+          }
+
+        }
+      );
+
+    });
+
+
+  /* =======================================================
+     ATALHOS DE TECLADO
+  ======================================================= */
+
+  document.addEventListener(
+    "keydown",
+    event => {
+
+      if (
+        (event.ctrlKey ||
+         event.metaKey) &&
+        event.key.toLowerCase() === "k"
+      ) {
+
+        event.preventDefault();
+
+        const search =
+          $(
+            'input[type="search"], [data-search]'
+          );
+
+        if (search) {
+          search.focus();
+        }
+
+      }
+
+    }
+  );
+
 
 })();
