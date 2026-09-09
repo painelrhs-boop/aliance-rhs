@@ -2,25 +2,42 @@
   "name": "ALIANCE R.H.S",
   "shortName": "R.H.S",
   "title": "ALIANCE R.H.S — Raven Hells System",
-  "description": "ALIANCE R.H.S — Raven Hells System. Uma aliança criada para conectar, fortalecer e construir.",
+  "description": "ALIANCE R.H.S nasceu para conectar comunidades, projetos e pessoas em uma estrutura forte e organizada.",
   "version": "1.0.0",
   "status": "online",
-  "theme": {
-    "primary": "#d60000",
-    "secondary": "#070707",
-    "background": "#070707",
-    "text": "#ffffff"
-  },
   "branding": {
     "logo": "/logo.svg",
     "name": "ALIANCE R.H.S",
     "subtitle": "RAVEN HELLS SYSTEM",
     "slogan": "A cada ação tem sua reação."
   },
+  "theme": {
+    "primary": "#d40000",
+    "secondary": "#080808",
+    "background": "#050505",
+    "surface": "#0d0d0d",
+    "text": "#ffffff",
+    "muted": "#9b9b9b"
+  },
+  "navigation": {
+    "home": "/",
+    "admin": "/admin.html"
+  },
+  "api": {
+    "adminLogin": "/api/admin/login",
+    "adminLogout": "/api/admin/logout",
+    "adminSession": "/api/admin/session",
+    "adminHistory": "/api/admin/history",
+    "communityResolve": "/api/community/resolve"
+  },
   "admin": {
     "enabled": true,
-    "loginEndpoint": "/api/admin/login",
-    "sessionEndpoint": "/api/admin/session",
-    "logoutEndpoint": "/api/admin/logout"
+    "loginRequired": true,
+    "sessionCookie": "rhs_session"
+  },
+  "community": {
+    "name": "ALIANCE R.H.S",
+    "slogan": "A cada ação tem sua reação.",
+    "status": "online"
   }
 }
