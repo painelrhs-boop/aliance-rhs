@@ -1,1191 +1,409 @@
 /* =========================================================
-   ALIANCE R.H.S
-   RAVEN HELLS SYSTEM
-   JAVASCRIPT PRINCIPAL
-========================================================= */
+   ALIANCE R.H.S — ADMIN PANEL
+   Raven Hells System
+   ========================================================= */
 
-(() => {
-  "use strict";
+document.addEventListener("DOMContentLoaded", () => {
+  initAdmin();
+});
 
+async function initAdmin() {
+  bindLogin();
+  bindLogout();
+  bindSections();
+  bindCommunity();
 
-  /* =======================================================
-     HELPERS
-  ======================================================= */
+  await checkAdminSession();
+}
 
-  const $ = (selector, parent = document) =>
-    parent.querySelector(selector);
+/* =========================================================
+   LOGIN
+   ========================================================= */
 
-  const $$ = (selector, parent = document) =>
-    [...parent.querySelectorAll(selector)];
+function bindLogin() {
+  const form = document.querySelector("#admin-login-form");
 
+  if (!form) return;
 
-  /* =======================================================
-     TOAST
-  ======================================================= */
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
 
-  function showToast(message, type = "normal") {
+    const emailInput = document.querySelector("#admin-email");
+    const passwordInput = document.querySelector("#admin-password");
+    const button = document.querySelector("#admin-login-button");
+    const message = document.querySelector("#admin-login-message");
 
-    let toast = $(".toast");
+    const email = emailInput?.value.trim();
+    const password = passwordInput?.value;
 
-    if (!toast) {
-      toast = document.createElement("div");
-      toast.className = "toast";
-      document.body.appendChild(toast);
+    if (!email || !password) {
+      setMessage(
+        message,
+        "Preencha o e-mail e a senha.",
+        "error"
+      );
+      return;
     }
 
-    toast.textContent = message;
+    setButtonLoading(button, true);
 
-    toast.dataset.type = type;
-
-    toast.classList.add("show");
-
-    clearTimeout(toast._timer);
-
-    toast._timer = setTimeout(() => {
-      toast.classList.remove("show");
-    }, 3200);
-  }
-
-
-  window.RHS = {
-    showToast
-  };
-
-
-  /* =======================================================
-     ANO AUTOMÁTICO
-  ======================================================= */
-
-  const year = $("#currentYear");
-
-  if (year) {
-    year.textContent = new Date().getFullYear();
-  }
-
-
-  /* =======================================================
-     MENU MOBILE
-  ======================================================= */
-
-  const mobileMenu = $("#mobileMenu");
-  const mainNav = $(".main-nav");
-
-  if (mobileMenu && mainNav) {
-
-    mobileMenu.addEventListener("click", () => {
-
-      mainNav.classList.toggle("open");
-
-      mobileMenu.classList.toggle("open");
-
-    });
-
-
-    $$(".main-nav a").forEach(link => {
-
-      link.addEventListener("click", () => {
-        mainNav.classList.remove("open");
-        mobileMenu.classList.remove("open");
-      });
-
-    });
-
-  }
-
-
-  /* =======================================================
-     NAVEGAÇÃO ATIVA
-  ======================================================= */
-
-  const navigationLinks = $$(".main-nav a");
-
-  const sections = $$("main section[id]");
-
-  if (navigationLinks.length && sections.length) {
-
-    const updateActiveNavigation = () => {
-
-      const scrollPosition =
-        window.scrollY + 180;
-
-      let currentSection = "";
-
-      sections.forEach(section => {
-
-        const top = section.offsetTop;
-        const bottom =
-          top + section.offsetHeight;
-
-        if (
-          scrollPosition >= top &&
-          scrollPosition < bottom
-        ) {
-          currentSection = section.id;
-        }
-
-      });
-
-
-      navigationLinks.forEach(link => {
-
-        const href =
-          link.getAttribute("href");
-
-        link.classList.toggle(
-          "active",
-          href === `#${currentSection}`
-        );
-
-      });
-
-    };
-
-
-    window.addEventListener(
-      "scroll",
-      updateActiveNavigation,
-      { passive: true }
+    setMessage(
+      message,
+      "Verificando acesso...",
+      "info"
     );
-
-    updateActiveNavigation();
-
-  }
-
-
-  /* =======================================================
-     LINKS COM SCROLL SUAVE
-  ======================================================= */
-
-  $$('a[href^="#"]').forEach(link => {
-
-    link.addEventListener("click", event => {
-
-      const targetId =
-        link.getAttribute("href");
-
-      if (
-        !targetId ||
-        targetId === "#"
-      ) {
-        return;
-      }
-
-      const target =
-        document.querySelector(targetId);
-
-      if (!target) {
-        return;
-      }
-
-      event.preventDefault();
-
-      target.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
-
-    });
-
-  });
-
-
-  /* =======================================================
-     STATUS VISUAL
-  ======================================================= */
-
-  const statusDot = $(".online-dot");
-
-  if (statusDot) {
-
-    statusDot.setAttribute(
-      "title",
-      "Sistema operacional"
-    );
-
-  }
-
-
-  /* =======================================================
-     API HELPER
-  ======================================================= */
-
-  async function api(
-    url,
-    options = {}
-  ) {
-
-    const config = {
-      credentials: "same-origin",
-      ...options
-    };
-
-
-    config.headers = {
-      Accept: "application/json",
-      ...(options.headers || {})
-    };
-
-
-    if (
-      config.body &&
-      typeof config.body !== "string"
-    ) {
-
-      config.headers["Content-Type"] =
-        "application/json";
-
-      config.body =
-        JSON.stringify(config.body);
-
-    }
-
-
-    const response =
-      await fetch(url, config);
-
-
-    let data = null;
-
-    const contentType =
-      response.headers.get("content-type") || "";
-
-
-    if (
-      contentType.includes(
-        "application/json"
-      )
-    ) {
-
-      try {
-        data = await response.json();
-      } catch {
-        data = null;
-      }
-
-    } else {
-
-      try {
-        const text =
-          await response.text();
-
-        data = text
-          ? { message: text }
-          : null;
-
-      } catch {
-        data = null;
-      }
-
-    }
-
-
-    if (!response.ok) {
-
-      const error =
-        new Error(
-          data?.message ||
-          data?.error ||
-          `Erro HTTP ${response.status}`
-        );
-
-      error.status =
-        response.status;
-
-      error.data = data;
-
-      throw error;
-
-    }
-
-
-    return data;
-
-  }
-
-
-  window.RHS.api = api;
-
-
-  /* =======================================================
-     SESSÃO DO ADMIN
-  ======================================================= */
-
-  async function getAdminSession() {
-
-    return api(
-      "/api/admin/session",
-      {
-        method: "GET"
-      }
-    );
-
-  }
-
-
-  window.RHS.getAdminSession =
-    getAdminSession;
-
-
-  /* =======================================================
-     LOGOUT
-  ======================================================= */
-
-  async function logout() {
 
     try {
-
-      await api(
-        "/api/admin/logout",
-        {
-          method: "POST"
-        }
+      const result = await window.RHS.adminLogin(
+        email,
+        password
       );
 
+      if (
+        result?.authenticated === false ||
+        result?.success === false
+      ) {
+        throw new Error(
+          result?.message ||
+          result?.error ||
+          "E-mail ou senha inválidos."
+        );
+      }
+
+      showAdminPanel(result);
+
+      showToast(
+        "Login realizado com sucesso.",
+        "success"
+      );
     } catch (error) {
+      console.error(error);
 
-      console.warn(
-        "Erro ao encerrar sessão:",
-        error
+      setMessage(
+        message,
+        error?.message ||
+          "Não foi possível realizar o login.",
+        "error"
       );
-
     } finally {
-
-      window.location.href =
-        "/admin.html";
-
+      setButtonLoading(button, false);
     }
-
-  }
-
-
-  window.RHS.logout = logout;
-
-
-  /* =======================================================
-     BOTÕES DE LOGOUT
-  ======================================================= */
-
-  $$("[data-logout], .logout-button, #logoutButton")
-    .forEach(button => {
-
-      button.addEventListener(
-        "click",
-        event => {
-
-          event.preventDefault();
-
-          logout();
-
-        }
-      );
-
-    });
-
-
-  /* =======================================================
-     LOGIN
-  ======================================================= */
-
-  const loginForm =
-    $("#loginForm");
-
-
-  if (loginForm) {
-
-    const loginButton =
-      loginForm.querySelector(
-        'button[type="submit"]'
-      );
-
-    const errorBox =
-      $("#loginError") ||
-      $(".login-error");
-
-
-    loginForm.addEventListener(
-      "submit",
-      async event => {
-
-        event.preventDefault();
-
-
-        const emailInput =
-          loginForm.querySelector(
-            '[name="email"]'
-          );
-
-        const passwordInput =
-          loginForm.querySelector(
-            '[name="password"]'
-          );
-
-
-        if (
-          !emailInput ||
-          !passwordInput
-        ) {
-
-          showToast(
-            "Campos de login não encontrados.",
-            "error"
-          );
-
-          return;
-
-        }
-
-
-        const email =
-          emailInput.value.trim();
-
-        const password =
-          passwordInput.value;
-
-
-        if (!email || !password) {
-
-          showLoginError(
-            "Preencha o e-mail e a senha."
-          );
-
-          return;
-
-        }
-
-
-        setLoginLoading(
-          true,
-          loginButton
-        );
-
-
-        hideLoginError(
-          errorBox
-        );
-
-
-        try {
-
-          await api(
-            "/api/admin/login",
-            {
-              method: "POST",
-
-              body: {
-                email,
-                password
-              }
-            }
-          );
-
-
-          showToast(
-            "Login realizado com sucesso."
-          );
-
-
-          setTimeout(() => {
-
-            window.location.href =
-              "/admin.html";
-
-          }, 350);
-
-
-        } catch (error) {
-
-          console.error(
-            "Falha no login:",
-            error
-          );
-
-
-          showLoginError(
-            getLoginErrorMessage(error)
-          );
-
-
-          setLoginLoading(
-            false,
-            loginButton
-          );
-
-        }
-
-      }
-    );
-
-
-    function showLoginError(message) {
-
-      if (!errorBox) {
-
-        showToast(
-          message,
-          "error"
-        );
-
-        return;
-
-      }
-
-
-      errorBox.textContent =
-        message;
-
-      errorBox.classList.remove(
-        "hidden"
-      );
-
+  });
+}
+
+/* =========================================================
+   SESSION
+   ========================================================= */
+
+async function checkAdminSession() {
+  const login = document.querySelector("#admin-login");
+  const panel = document.querySelector("#admin-panel");
+
+  if (!login || !panel) return;
+
+  try {
+    const session = await window.RHS.getAdminSession();
+
+    const authenticated =
+      session?.authenticated === true ||
+      session?.loggedIn === true ||
+      Boolean(session?.user);
+
+    if (authenticated) {
+      showAdminPanel(session);
+    } else {
+      showLogin();
     }
-
-
-    function hideLoginError(element) {
-
-      if (!element) {
-        return;
-      }
-
-      element.textContent = "";
-
-      element.classList.add(
-        "hidden"
-      );
-
-    }
-
-
-    function setLoginLoading(
-      loading,
-      button
-    ) {
-
-      if (!button) {
-        return;
-      }
-
-
-      if (loading) {
-
-        button.disabled = true;
-
-        button.dataset.originalText =
-          button.textContent;
-
-        button.textContent =
-          "ENTRANDO...";
-
-      } else {
-
-        button.disabled = false;
-
-        button.textContent =
-          button.dataset.originalText ||
-          "ENTRAR";
-
-      }
-
-    }
-
-
-    function getLoginErrorMessage(
+  } catch (error) {
+    console.warn(
+      "Sessão administrativa não encontrada.",
       error
-    ) {
-
-      if (
-        error?.status === 401
-      ) {
-
-        return "E-mail ou senha incorretos.";
-
-      }
-
-
-      if (
-        error?.status === 429
-      ) {
-
-        return "Muitas tentativas. Aguarde um pouco.";
-
-      }
-
-
-      if (
-        error?.message
-      ) {
-
-        return error.message;
-
-      }
-
-
-      return "Não foi possível entrar. Tente novamente.";
-
-    }
-
-  }
-
-
-  /* =======================================================
-     PROTEÇÃO DO PAINEL
-  ======================================================= */
-
-  const isAdminPage =
-    document.body.classList.contains(
-      "admin-page"
-    ) ||
-    location.pathname === "/admin.html";
-
-
-  if (isAdminPage) {
-
-    protectAdminPage();
-
-  }
-
-
-  async function protectAdminPage() {
-
-    try {
-
-      const session =
-        await getAdminSession();
-
-
-      const authenticated =
-        Boolean(
-          session?.authenticated ??
-          session?.loggedIn ??
-          session?.user ??
-          session?.admin
-        );
-
-
-      if (!authenticated) {
-
-        window.location.href =
-          "/admin.html";
-
-        return;
-
-      }
-
-
-      populateAdminUser(
-        session
-      );
-
-
-      document.documentElement
-        .classList.add(
-          "rhs-authenticated"
-        );
-
-
-    } catch (error) {
-
-      console.warn(
-        "Não foi possível verificar a sessão:",
-        error
-      );
-
-
-      if (
-        error?.status === 401 ||
-        error?.status === 403
-      ) {
-
-        window.location.href =
-          "/admin.html";
-
-      }
-
-    }
-
-  }
-
-
-  window.RHS.protectAdminPage =
-    protectAdminPage;
-
-
-  /* =======================================================
-     USUÁRIO LOGADO
-  ======================================================= */
-
-  function populateAdminUser(
-    session
-  ) {
-
-    const user =
-      session?.user ||
-      session?.admin ||
-      session;
-
-
-    const name =
-      user?.name ||
-      user?.username ||
-      user?.email ||
-      "Administrador";
-
-
-    const email =
-      user?.email ||
-      "";
-
-
-    const role =
-      user?.role ||
-      user?.type ||
-      "ADMIN";
-
-
-    $$(".user-name")
-      .forEach(element => {
-
-        element.textContent =
-          name;
-
-      });
-
-
-    $$(".user-email")
-      .forEach(element => {
-
-        element.textContent =
-          email;
-
-      });
-
-
-    $$(".user-role")
-      .forEach(element => {
-
-        element.textContent =
-          role;
-
-      });
-
-
-    $$(".avatar")
-      .forEach(element => {
-
-        const firstLetter =
-          String(name)
-            .trim()
-            .charAt(0)
-            .toUpperCase();
-
-        element.textContent =
-          firstLetter || "A";
-
-      });
-
-  }
-
-
-  window.RHS.populateAdminUser =
-    populateAdminUser;
-
-
-  /* =======================================================
-     HISTÓRICO ADMINISTRATIVO
-  ======================================================= */
-
-  async function loadAdminHistory(
-    target
-  ) {
-
-    try {
-
-      const data =
-        await api(
-          "/api/admin/history",
-          {
-            method: "GET"
-          }
-        );
-
-
-      const history =
-        Array.isArray(data)
-          ? data
-          : (
-            data?.history ||
-            data?.items ||
-            data?.data ||
-            []
-          );
-
-
-      if (!target) {
-        return history;
-      }
-
-
-      target.innerHTML = "";
-
-
-      if (!history.length) {
-
-        target.innerHTML = `
-          <div class="text-muted">
-            Nenhum registro encontrado.
-          </div>
-        `;
-
-        return history;
-
-      }
-
-
-      history.forEach(item => {
-
-        const row =
-          document.createElement(
-            "div"
-          );
-
-
-        row.className =
-          "history-item";
-
-
-        const action =
-          item.action ||
-          item.event ||
-          item.type ||
-          "Ação administrativa";
-
-
-        const date =
-          item.createdAt ||
-          item.date ||
-          item.timestamp ||
-          "";
-
-
-        row.innerHTML = `
-          <strong>${escapeHtml(action)}</strong>
-          <span>${escapeHtml(formatDate(date))}</span>
-        `;
-
-
-        target.appendChild(row);
-
-      });
-
-
-      return history;
-
-    } catch (error) {
-
-      console.error(
-        "Erro ao carregar histórico:",
-        error
-      );
-
-
-      if (target) {
-
-        target.innerHTML = `
-          <div class="text-muted">
-            Não foi possível carregar o histórico.
-          </div>
-        `;
-
-      }
-
-
-      return [];
-
-    }
-
-  }
-
-
-  window.RHS.loadAdminHistory =
-    loadAdminHistory;
-
-
-  /* =======================================================
-     FORMATADORES
-  ======================================================= */
-
-  function formatDate(value) {
-
-    if (!value) {
-      return "Data não informada";
-    }
-
-
-    const date =
-      new Date(value);
-
-
-    if (
-      Number.isNaN(
-        date.getTime()
-      )
-    ) {
-
-      return String(value);
-
-    }
-
-
-    return date.toLocaleString(
-      "pt-BR",
-      {
-        dateStyle: "short",
-        timeStyle: "short"
-      }
     );
 
+    showLogin();
+  }
+}
+
+/* =========================================================
+   UI LOGIN / PAINEL
+   ========================================================= */
+
+function showLogin() {
+  const login = document.querySelector("#admin-login");
+  const panel = document.querySelector("#admin-panel");
+
+  if (login) {
+    login.hidden = false;
+    login.style.display = "";
   }
 
+  if (panel) {
+    panel.hidden = true;
+    panel.style.display = "none";
+  }
+}
 
-  function escapeHtml(value) {
+function showAdminPanel(session = {}) {
+  const login = document.querySelector("#admin-login");
+  const panel = document.querySelector("#admin-panel");
 
-    return String(value ?? "")
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
-
+  if (login) {
+    login.hidden = true;
+    login.style.display = "none";
   }
 
-
-  /* =======================================================
-     MODAIS
-  ======================================================= */
-
-  function openModal(id) {
-
-    const modal =
-      typeof id === "string"
-        ? document.getElementById(id)
-        : id;
-
-
-    if (!modal) {
-      return;
-    }
-
-
-    modal.classList.add("open");
-
-    document.body.style.overflow =
-      "hidden";
-
+  if (panel) {
+    panel.hidden = false;
+    panel.style.display = "";
   }
 
+  fillAdminUser(session);
+  loadHistory();
+}
 
-  function closeModal(id) {
+/* =========================================================
+   USER DATA
+   ========================================================= */
 
-    const modal =
-      typeof id === "string"
-        ? document.getElementById(id)
-        : id;
+function fillAdminUser(session) {
+  const user =
+    session?.user ||
+    session?.admin ||
+    session?.account ||
+    session;
 
+  const name =
+    user?.name ||
+    user?.username ||
+    user?.email ||
+    "Administrador";
 
-    if (!modal) {
-      return;
-    }
+  const email =
+    user?.email ||
+    session?.email ||
+    "—";
 
+  const nameElement =
+    document.querySelector("#admin-user-name");
 
-    modal.classList.remove("open");
+  const emailElement =
+    document.querySelector("#admin-user-email");
 
-    document.body.style.overflow =
-      "";
-
+  if (nameElement) {
+    nameElement.textContent = name;
   }
 
+  if (emailElement) {
+    emailElement.textContent = email;
+  }
 
-  window.RHS.openModal =
-    openModal;
+  const status =
+    document.querySelector("#session-status");
 
-  window.RHS.closeModal =
-    closeModal;
+  if (status) {
+    status.textContent = "Sessão ativa";
+  }
+}
 
+/* =========================================================
+   LOGOUT
+   ========================================================= */
 
-  $$(".modal").forEach(modal => {
+function bindLogout() {
+  const buttons = document.querySelectorAll(
+    "[data-admin-logout], #admin-logout"
+  );
 
-    modal.addEventListener(
-      "click",
-      event => {
-
-        if (
-          event.target === modal
-        ) {
-
-          closeModal(modal);
-
-        }
-
+  buttons.forEach((button) => {
+    button.addEventListener("click", async () => {
+      try {
+        await window.RHS.adminLogout();
+      } catch (error) {
+        console.warn(
+          "Erro ao encerrar sessão:",
+          error
+        );
       }
-    );
 
+      showLogin();
+
+      const email =
+        document.querySelector("#admin-email");
+
+      const password =
+        document.querySelector("#admin-password");
+
+      const message =
+        document.querySelector("#admin-login-message");
+
+      if (email) email.value = "";
+      if (password) password.value = "";
+
+      setMessage(
+        message,
+        "Sessão encerrada.",
+        "info"
+      );
+
+      showToast(
+        "Você saiu do painel.",
+        "success"
+      );
+    });
+  });
+}
+
+/* =========================================================
+   SECTIONS
+   ========================================================= */
+
+function bindSections() {
+  const buttons = document.querySelectorAll(
+    "[data-admin-section]"
+  );
+
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const target =
+        button.dataset.adminSection;
+
+      if (!target) return;
+
+      activateSection(target);
+    });
+  });
+}
+
+function activateSection(sectionName) {
+  const buttons = document.querySelectorAll(
+    "[data-admin-section]"
+  );
+
+  buttons.forEach((button) => {
+    button.classList.toggle(
+      "active",
+      button.dataset.adminSection === sectionName
+    );
   });
 
-
-  $$("[data-modal-open]")
-    .forEach(button => {
-
-      button.addEventListener(
-        "click",
-        () => {
-
-          openModal(
-            button.dataset.modalOpen
-          );
-
-        }
-      );
-
-    });
-
-
-  $$("[data-modal-close]")
-    .forEach(button => {
-
-      button.addEventListener(
-        "click",
-        () => {
-
-          const modal =
-            button.closest(".modal");
-
-          closeModal(modal);
-
-        }
-      );
-
-    });
-
-
-  /* =======================================================
-     ESC PARA FECHAR MODAL
-  ======================================================= */
-
-  document.addEventListener(
-    "keydown",
-    event => {
-
-      if (
-        event.key !== "Escape"
-      ) {
-        return;
-      }
-
-
-      const openedModal =
-        $(".modal.open");
-
-
-      if (openedModal) {
-
-        closeModal(
-          openedModal
-        );
-
-      }
-
-    }
+  const sections = document.querySelectorAll(
+    "[data-admin-content]"
   );
 
+  let found = false;
 
-  /* =======================================================
-     MENU ADMIN MOBILE
-  ======================================================= */
+  sections.forEach((section) => {
+    const matches =
+      section.dataset.adminContent === sectionName;
 
-  const adminMenuButton =
-    $(
-      "#adminMenuButton, [data-admin-menu]"
+    section.hidden = !matches;
+
+    if (matches) {
+      section.style.display = "";
+      found = true;
+    } else {
+      section.style.display = "none";
+    }
+  });
+
+  if (!found) {
+    const fallback =
+      document.querySelector(
+        `#admin-section-${sectionName}`
+      );
+
+    if (fallback) {
+      fallback.hidden = false;
+      fallback.style.display = "";
+    }
+  }
+}
+
+/* =========================================================
+   HISTORY
+   ========================================================= */
+
+async function loadHistory() {
+  const container =
+    document.querySelector("#admin-history-list");
+
+  if (!container) return;
+
+  container.innerHTML = `
+    <div class="admin-loading">
+      Carregando histórico...
+    </div>
+  `;
+
+  try {
+    const result =
+      await window.RHS.getAdminHistory();
+
+    const history =
+      Array.isArray(result)
+        ? result
+        : result?.history ||
+          result?.items ||
+          result?.data ||
+          [];
+
+    renderHistory(container, history);
+  } catch (error) {
+    console.warn(
+      "Não foi possível carregar o histórico.",
+      error
     );
 
-  const sidebar =
-    $(".sidebar");
+    container.innerHTML = `
+      <div class="admin-empty">
+        <strong>Histórico indisponível</strong>
+        <span>
+          Não foi possível carregar os registros agora.
+        </span>
+      </div>
+    `;
+  }
+}
 
+function renderHistory(container, history) {
+  if (!history.length) {
+    container.innerHTML = `
+      <div class="admin-empty">
+        <strong>Nenhum registro encontrado</strong>
+        <span>
+          O histórico aparecerá aqui quando houver atividades.
+        </span>
+      </div>
+    `;
 
-  if (
-    adminMenuButton &&
-    sidebar
-  ) {
-
-    adminMenuButton.addEventListener(
-      "click",
-      () => {
-
-        sidebar.classList.toggle(
-          "open"
-        );
-
-      }
-    );
-
+    return;
   }
 
+  container.innerHTML = history
+    .map((item) => {
+      const action =
+        item?.action ||
+        item?.event ||
+        item?.type ||
+        "Atividade";
 
-  /* =======================================================
-     FECHAR SIDEBAR AO CLICAR
-  ======================================================= */
+      const user =
+        item?.user ||
+        item?.email ||
+        item?.admin ||
+        "Administrador";
 
-  $$(".sidebar .nav-link")
-    .forEach(link => {
+      const date =
+        item?.date ||
+        item?.created_at ||
+        item?.createdAt ||
+        item?.timestamp;
 
-      link.addEventListener(
-        "click",
-        () => {
+      return `
+        <div class="history-item">
+          <div class="history-item-main">
+            <strong>${escapeHTML(action)}</strong>
+            <span>${escapeHTML(user)}</span>
+          </div>
 
-          if (
-            window.innerWidth <= 760 &&
-            sidebar
-          ) {
-
-            sidebar.classList.remove(
-              "open"
-            );
-
-          }
-
-        }
-      );
-
-    });
-
-
-  /* =======================================================
-     ATALHOS DE TECLADO
-  ======================================================= */
-
-  document.addEventListener(
-    "keydown",
-    event => {
-
-      if (
-        (event.ctrlKey ||
-         event.metaKey) &&
-        event.key.toLowerCase() === "k"
-      ) {
-
-        event.preventDefault();
-
-        const search =
-          $(
-            'input[type="search"], [data-search]'
-          );
-
-        if (search) {
-          search.focus();
-        }
-
-      }
-
-    }
-  );
-
-
-})();
+          <time>
