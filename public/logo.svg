@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 260">
+  <defs>
+    <linearGradient id="red" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ff2a2a"/>
+      <stop offset="100%" stop-color="#8b0000"/>
+    </linearGradient>
+
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="800" height="260" rx="35" fill="#070707"/>
+
+  <path
+    d="M105 55 L145 75 L185 55 L185 135
+       C185 175 145 200 145 200
+       C145 200 105 175 105 135 Z"
+    fill="none"
+    stroke="url(#red)"
+    stroke-width="10"
+    filter="url(#glow)"
+  />
+
+  <path
+    d="M128 91 L145 103 L162 91
+       M128 116 L145 128 L162 116
+       M128 141 L145 153 L162 141"
+    fill="none"
+    stroke="#ffffff"
+    stroke-width="5"
+    stroke-linecap="round"
+    opacity="0.9"
+  />
+
+  <text
+    x="220"
+    y="125"
+    fill="#ffffff"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="58"
+    font-weight="900"
+    letter-spacing="3">
+    ALIANCE
+  </text>
+
+  <text
+    x="222"
+    y="177"
+    fill="url(#red)"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="42"
+    font-weight="900"
+    letter-spacing="8">
+    R.H.S
+  </text>
+
+  <text
+    x="505"
+    y="177"
+    fill="#777777"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="16"
+    font-weight="700"
+    letter-spacing="3">
+    RAVEN HELLS SYSTEM
+  </text>
+</svg>
