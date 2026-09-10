@@ -1,778 +1,593 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="dark">
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#050505">
+<meta name="description" content="ALIANCE R.H.S — grupos e canais em um só lugar">
 <title>ALIANCE R.H.S</title>
-<link rel="icon" id="favicon" href="303917.jpg">
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<script>
-tailwind.config = {
-  darkMode: 'class',
-  theme: {
-    extend: {
-      colors: {
-        brand: {
-          red: '#ff0033',
-          dark: '#0a0a0c',
-          card: '#121216',
-          border: '#1e1e26',
-          muted: '#8b8b9a'
-        }
-      },
-      fontFamily: { sans: ['Inter', 'sans-serif'] }
-    }
-  }
-}
-</script>
+
+<link rel="icon" href="/logo.svg">
+
+<link rel="stylesheet" href="/css/global.css">
+<link rel="stylesheet" href="/css/components.css">
+<link rel="stylesheet" href="/css/animations.css">
+<link rel="stylesheet" href="/css/responsive.css">
+
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  background: #0a0a0c;
-  color: #fff;
-  font-family: 'Inter', sans-serif;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
 
-.glass { background: rgba(18,18,22,0.92); backdrop-filter: blur(16px); }
-.card { background: #121216; border: 1px solid #1e1e26; border-radius: 16px; }
-.card:active { transform: scale(0.98); }
+/* =========================================================
+   ALIANCE R.H.S — NETWORK HOME
+   ========================================================= */
 
-.badge-online {
-  display: inline-flex; align-items: center; gap: 4px;
-  font-size: 10px; font-weight: 700; color: #22c55e;
-}
-.badge-online::before {
-  content: ''; width: 6px; height: 6px; border-radius: 50%;
-  background: #22c55e; box-shadow: 0 0 6px #22c55e;
-}
-.badge-offline {
-  display: inline-flex; align-items: center; gap: 4px;
-  font-size: 10px; font-weight: 700; color: #6b7280;
-}
-.badge-offline::before {
-  content: ''; width: 6px; height: 6px; border-radius: 50%; background: #6b7280;
+:root{
+  --black:#030303;
+  --black2:#070707;
+  --panel:#0a0b0c;
+  --panel2:#0e1012;
+  --panel3:#121416;
+  --border:#202326;
+  --border2:#292c30;
+
+  --red:#e50914;
+  --red2:#ff1824;
+  --red3:#8c0008;
+
+  --white:#f7f7f7;
+  --text:#d7d7d7;
+  --muted:#777;
+  --muted2:#4c4c4c;
+
+  --green:#18d96b;
+  --yellow:#ffbd25;
+
+  --radius:14px;
 }
 
-.btn-red {
-  background: #ff0033; color: #fff; font-weight: 700; font-size: 12px;
-  padding: 10px 16px; border-radius: 10px; border: none; cursor: pointer;
-  transition: opacity 0.2s;
-}
-.btn-red:hover { opacity: 0.9; }
-.btn-outline {
-  background: transparent; color: #fff; font-weight: 600; font-size: 12px;
-  padding: 10px 16px; border-radius: 10px; border: 1px solid #2a2a35; cursor: pointer;
+/* RESET */
+
+*{
+  box-sizing:border-box;
 }
 
-.filter-btn {
-  padding: 7px 14px; border-radius: 20px; font-size: 11px; font-weight: 700;
-  background: #1a1a22; color: #8b8b9a; border: none; cursor: pointer;
-}
-.filter-btn.active { background: #ff0033; color: #fff; }
-
-.bottom-nav {
-  position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
-  background: rgba(10,10,12,0.96); backdrop-filter: blur(20px);
-  border-top: 1px solid #1e1e26; padding: 8px 0 env(safe-area-inset-bottom);
-}
-.nav-item {
-  display: flex; flex-direction: column; align-items: center; gap: 2px;
-  font-size: 10px; font-weight: 600; color: #6b7280; background: none; border: none; cursor: pointer;
-}
-.nav-item.active { color: #ff0033; }
-.nav-item i { font-size: 18px; }
-
-.toast-box {
-  position: fixed; top: 16px; right: 16px; z-index: 9999;
-  background: #1a1a22; border: 1px solid #2a2a35; color: #fff;
-  padding: 12px 16px; border-radius: 12px; font-size: 13px; font-weight: 600;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.5); animation: slideIn 0.25s ease;
-}
-@keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-
-.hidden { display: none !important; }
-.page { display: none; }
-.page.active { display: block; animation: fade 0.25s ease; }
-@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
-
-.admin-sidebar {
-  background: #0e0e12; border-right: 1px solid #1e1e26;
-}
-.admin-nav-btn {
-  display: flex; align-items: center; gap: 10px;
-  width: 100%; padding: 10px 14px; border-radius: 10px;
-  font-size: 13px; font-weight: 600; color: #8b8b9a;
-  background: none; border: none; cursor: pointer; text-align: left;
-}
-.admin-nav-btn.active, .admin-nav-btn:hover { background: #1a1a22; color: #fff; }
-.admin-nav-btn.active { color: #ff0033; }
-
-input, textarea, select {
-  background: #0e0e12; border: 1px solid #1e1e26; border-radius: 10px;
-  color: #fff; padding: 10px 14px; font-size: 13px; width: 100%;
-  outline: none;
-}
-input:focus, textarea:focus, select:focus { border-color: #ff0033; }
-
-.modal-bg {
-  position: fixed; inset: 0; z-index: 100;
-  background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);
-  display: flex; align-items: center; justify-content: center; padding: 16px;
-}
-.modal-box {
-  background: #121216; border: 1px solid #1e1e26; border-radius: 20px;
-  width: 100%; max-width: 400px; max-height: 90vh; overflow-y: auto; padding: 24px;
+html{
+  scroll-behavior:smooth;
 }
 
-.logo-shield {
-  width: 120px; height: 120px; margin: 0 auto 16px;
-  background: radial-gradient(circle at 50% 30%, #2a0008 0%, #0a0a0c 70%);
-  border-radius: 50%; border: 2px solid #ff0033;
-  box-shadow: 0 0 40px rgba(255,0,51,0.35);
-  display: flex; align-items: center; justify-content: center;
-  position: relative;
-}
-.logo-shield img { width: 70%; height: 70%; object-fit: contain; border-radius: 50%; }
-
-@media (min-width: 768px) {
-  .bottom-nav { display: none; }
-  body { padding-bottom: 0; }
-}
-</style>
-</head>
-<body class="pb-20 md:pb-0">
-
-<div id="toasts"></div>
-
-<!-- ==================== HEADER ==================== -->
-<header class="sticky top-0 z-40 glass border-b border-brand-border px-4 py-3">
-  <div class="max-w-lg mx-auto flex items-center justify-between">
-    <div class="flex items-center gap-2.5 cursor-pointer" onclick="goPage('inicio')">
-      <div class="w-9 h-9 rounded-full border border-brand-red/50 overflow-hidden flex items-center justify-center bg-black">
-        <img id="hdr-logo" src="303917.jpg" class="w-full h-full object-cover" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-brand-red font-black text-sm\'>R</span>'">
-      </div>
-      <div>
-        <div class="font-black text-sm tracking-wide">ALIANCE <span class="text-brand-red">R.H.S</span></div>
-      </div>
-    </div>
-    <div class="flex items-center gap-2">
-      <button onclick="openAdmin()" class="w-9 h-9 rounded-xl bg-brand-card border border-brand-border flex items-center justify-center text-brand-muted hover:text-white">
-        <i class="fa-solid fa-bars text-sm"></i>
-      </button>
-    </div>
-  </div>
-</header>
-
-<!-- ==================== PUBLIC PAGES ==================== -->
-<main class="max-w-lg mx-auto px-4 py-5">
-
-  <!-- INÍCIO -->
-  <div id="page-inicio" class="page active">
-    <!-- Hero -->
-    <div class="card p-6 text-center mb-5 relative overflow-hidden">
-      <div class="absolute inset-0 bg-gradient-to-b from-brand-red/10 to-transparent pointer-events-none"></div>
-      <div class="relative">
-        <div class="logo-shield">
-          <img id="hero-logo" src="303917.jpg" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-brand-red font-black text-4xl\'>R</span>'">
-        </div>
-        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-red/15 border border-brand-red/30 text-brand-red text-[10px] font-bold uppercase tracking-wider mb-3">
-          <span class="w-1.5 h-1.5 rounded-full bg-brand-red"></span> OFICIAL
-        </div>
-        <h1 class="text-2xl font-black mb-1">ALIANCE <span class="text-brand-red">R.H.S</span></h1>
-        <p class="text-brand-muted text-xs leading-relaxed max-w-xs mx-auto mb-5" id="hero-slogan">
-          Uma aliança construída por união, respeito e lealdade.
-        </p>
-        <div class="flex gap-2 justify-center" id="hero-btns">
-          <a id="btn-wa" href="#" target="_blank" class="btn-red flex items-center gap-1.5"><i class="fa-brands fa-whatsapp"></i> WHATSAPP</a>
-          <a id="btn-tg" href="#" target="_blank" class="btn-outline flex items-center gap-1.5"><i class="fa-solid fa-paper-plane text-brand-red"></i> TELEGRAM</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Stats -->
-    <div class="grid grid-cols-2 gap-3 mb-6" id="stats-grid">
-      <div class="card p-4">
-        <div class="text-2xl font-black text-brand-red" id="st-grupos">0</div>
-        <div class="text-[10px] text-brand-muted font-semibold uppercase mt-0.5">Total de Grupos</div>
-      </div>
-      <div class="card p-4">
-        <div class="text-2xl font-black" id="st-canais">0</div>
-        <div class="text-[10px] text-brand-muted font-semibold uppercase mt-0.5">Total de Canais</div>
-      </div>
-      <div class="card p-4">
-        <div class="text-2xl font-black text-emerald-400" id="st-online">0</div>
-        <div class="text-[10px] text-brand-muted font-semibold uppercase mt-0.5">Online Agora</div>
-      </div>
-      <div class="card p-4">
-        <div class="text-2xl font-black" id="st-membros">0</div>
-        <div class="text-[10px] text-brand-muted font-semibold uppercase mt-0.5">Membros Equipe</div>
-      </div>
-    </div>
-
-    <!-- Grupos preview -->
-    <div class="flex items-center justify-between mb-3">
-      <h2 class="font-black text-sm flex items-center gap-2"><i class="fa-solid fa-users text-brand-red"></i> GRUPOS</h2>
-      <span class="text-[11px] text-brand-muted font-semibold">TOTAL: <span id="preview-g-count">0</span></span>
-    </div>
-    <div id="preview-grupos" class="space-y-3 mb-2"></div>
-    <button onclick="goPage('grupos')" class="w-full text-center text-xs font-bold text-brand-red py-2">Ver todos os grupos →</button>
-  </div>
-
-  <!-- GRUPOS -->
-  <div id="page-grupos" class="page">
-    <div class="flex items-center justify-between mb-4">
-      <h1 class="font-black text-lg flex items-center gap-2"><i class="fa-solid fa-users text-brand-red"></i> GRUPOS</h1>
-      <span class="text-xs text-brand-muted font-semibold">TOTAL: <span id="count-g">0</span></span>
-    </div>
-    <div class="relative mb-3">
-      <i class="fa-solid fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-muted text-xs"></i>
-      <input type="text" id="search-g" oninput="renderGrupos()" placeholder="Buscar Grupos" class="pl-10">
-    </div>
-    <div class="flex gap-2 mb-4 overflow-x-auto pb-1">
-      <button class="filter-btn active" data-f="ALL" onclick="setFilter('g', 'ALL', this)">TODOS</button>
-      <button class="filter-btn" data-f="VIP" onclick="setFilter('g', 'VIP', this)">VIP</button>
-      <button class="filter-btn" data-f="RECENT" onclick="setFilter('g', 'RECENT', this)">RECENTES</button>
-    </div>
-    <div id="list-grupos" class="space-y-3"></div>
-  </div>
-
-  <!-- CANAIS -->
-  <div id="page-canais" class="page">
-    <div class="flex items-center justify-between mb-4">
-      <h1 class="font-black text-lg flex items-center gap-2"><i class="fa-solid fa-bullhorn text-brand-red"></i> CANAIS</h1>
-      <span class="text-xs text-brand-muted font-semibold">TOTAL: <span id="count-c">0</span></span>
-    </div>
-    <div class="relative mb-3">
-      <i class="fa-solid fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-muted text-xs"></i>
-      <input type="text" id="search-c" oninput="renderCanais()" placeholder="Buscar Canais" class="pl-10">
-    </div>
-    <div class="flex gap-2 mb-4 overflow-x-auto pb-1">
-      <button class="filter-btn active" data-f="ALL" onclick="setFilter('c', 'ALL', this)">TODOS</button>
-      <button class="filter-btn" data-f="VIP" onclick="setFilter('c', 'VIP', this)">VIP</button>
-      <button class="filter-btn" data-f="RECENT" onclick="setFilter('c', 'RECENT', this)">RECENTES</button>
-    </div>
-    <div id="list-canais" class="space-y-3"></div>
-  </div>
-
-  <!-- MEMBROS -->
-  <div id="page-membros" class="page">
-    <div class="flex items-center justify-between mb-4">
-      <h1 class="font-black text-lg flex items-center gap-2"><i class="fa-solid fa-crown text-brand-red"></i> MEMBROS DA ALIANÇA</h1>
-      <span class="text-xs text-brand-muted font-semibold">TOTAL: <span id="count-m">0</span></span>
-    </div>
-    <div class="flex gap-2 mb-4 overflow-x-auto">
-      <button class="filter-btn active" onclick="setMemberFilter('ALL', this)">TODOS</button>
-      <button class="filter-btn" onclick="setMemberFilter('FOUNDER', this)">FOUNDER</button>
-      <button class="filter-btn" onclick="setMemberFilter('ADMIN', this)">ADMINISTRAÇÃO</button>
-    </div>
-    <div id="list-membros" class="grid grid-cols-2 gap-3"></div>
-  </div>
-
-  <!-- DETALHE GRUPO/CANAL -->
-  <div id="page-detail" class="page">
-    <button onclick="goBack()" class="flex items-center gap-2 text-sm text-brand-muted mb-4 font-semibold">
-      <i class="fa-solid fa-arrow-left"></i> Voltar
-    </button>
-    <div class="card p-5 text-center mb-4">
-      <div class="w-20 h-20 mx-auto rounded-2xl overflow-hidden border border-brand-red/40 mb-3 bg-black flex items-center justify-center">
-        <img id="det-foto" src="" class="w-full h-full object-cover" onerror="this.style.display='none'">
-      </div>
-      <div id="det-status" class="mb-1"></div>
-      <h1 class="font-black text-xl mb-1" id="det-nome"></h1>
-      <p class="text-xs text-brand-muted mb-3" id="det-desc"></p>
-      <div class="flex items-center justify-center gap-4 text-xs text-brand-muted mb-4">
-        <span><i class="fa-solid fa-users mr-1"></i> <span id="det-membros">0</span> membros</span>
-        <span id="det-cat"></span>
-      </div>
-      <a id="det-link" href="#" target="_blank" class="btn-red w-full block text-center">
-        <i class="fa-solid fa-right-to-bracket mr-1"></i> ENTRAR NO GRUPO
-      </a>
-    </div>
-    <div class="card p-4 space-y-3 text-sm">
-      <h3 class="font-bold text-xs uppercase text-brand-muted">Informações</h3>
-      <div class="flex justify-between"><span class="text-brand-muted">Categoria</span><span id="det-info-cat">—</span></div>
-      <div class="flex justify-between"><span class="text-brand-muted">Status</span><span id="det-info-status">—</span></div>
-      <div class="flex justify-between items-start gap-2"><span class="text-brand-muted shrink-0">Link</span><span id="det-info-link" class="text-brand-red text-right text-xs break-all">—</span></div>
-    </div>
-  </div>
-</main>
-
-<!-- ==================== BOTTOM NAV ==================== -->
-<nav class="bottom-nav md:hidden">
-  <div class="max-w-lg mx-auto flex justify-around">
-    <button class="nav-item active" data-page="inicio" onclick="goPage('inicio')"><i class="fa-solid fa-house"></i>Início</button>
-    <button class="nav-item" data-page="grupos" onclick="goPage('grupos')"><i class="fa-solid fa-users"></i>Grupos</button>
-    <button class="nav-item" data-page="canais" onclick="goPage('canais')"><i class="fa-solid fa-comments"></i>Canais</button>
-    <button class="nav-item" data-page="membros" onclick="goPage('membros')"><i class="fa-solid fa-user-group"></i>Membros</button>
-  </div>
-</nav>
-
-<!-- ==================== ADMIN ==================== -->
-<div id="admin-view" class="fixed inset-0 z-50 bg-brand-dark hidden overflow-y-auto">
-  <div class="min-h-screen flex flex-col md:flex-row">
-    <!-- Sidebar -->
-    <aside class="admin-sidebar w-full md:w-56 p-4 flex flex-col shrink-0">
-      <div class="flex items-center justify-between mb-5">
-        <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-lg bg-brand-red/20 border border-brand-red/40 flex items-center justify-center">
-            <i class="fa-solid fa-crown text-brand-red text-xs"></i>
-          </div>
-          <div>
-            <div class="text-xs font-black">Painel Admin</div>
-            <div class="text-[10px] text-emerald-400">Online</div>
-          </div>
-        </div>
-        <button onclick="closeAdmin()" class="md:hidden text-brand-muted text-lg"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <nav class="space-y-0.5 flex-1">
-        <button class="admin-nav-btn active" data-tab="dash" onclick="adminTab('dash')"><i class="fa-solid fa-chart-pie w-4"></i> Dashboard</button>
-        <button class="admin-nav-btn" data-tab="grupos" onclick="adminTab('grupos')"><i class="fa-solid fa-users w-4"></i> Grupos</button>
-        <button class="admin-nav-btn" data-tab="canais" onclick="adminTab('canais')"><i class="fa-solid fa-bullhorn w-4"></i> Canais</button>
-        <button class="admin-nav-btn" data-tab="membros" onclick="adminTab('membros')"><i class="fa-solid fa-user-gear w-4"></i> Membros</button>
-        <button class="admin-nav-btn" data-tab="aparencia" onclick="adminTab('aparencia')"><i class="fa-solid fa-palette w-4"></i> Aparência</button>
-        <button class="admin-nav-btn" data-tab="config" onclick="adminTab('config')"><i class="fa-solid fa-gear w-4"></i> Configurações</button>
-        <button class="admin-nav-btn" data-tab="backup" onclick="adminTab('backup')"><i class="fa-solid fa-database w-4"></i> Backup</button>
-      </nav>
-      <button onclick="closeAdmin()" class="btn-red w-full mt-4 text-center text-xs">Ver Site</button>
-      <button onclick="logout()" class="w-full text-center text-xs text-brand-muted py-2 mt-1">Sair</button>
-    </aside>
-
-    <!-- Content -->
-    <div class="flex-1 p-5 overflow-y-auto">
-      <!-- Dashboard -->
-      <div id="atab-dash" class="atab">
-        <h2 class="font-black text-lg mb-4">Dashboard</h2>
-        <div class="grid grid-cols-2 gap-3 mb-5">
-          <div class="card p-4"><div class="text-2xl font-black text-brand-red" id="ad-g">0</div><div class="text-[10px] text-brand-muted uppercase font-semibold">Grupos</div></div>
-          <div class="card p-4"><div class="text-2xl font-black" id="ad-c">0</div><div class="text-[10px] text-brand-muted uppercase font-semibold">Canais</div></div>
-          <div class="card p-4"><div class="text-2xl font-black" id="ad-m">0</div><div class="text-[10px] text-brand-muted uppercase font-semibold">Membros</div></div>
-          <div class="card p-4"><div class="text-2xl font-black text-emerald-400" id="ad-on">0</div><div class="text-[10px] text-brand-muted uppercase font-semibold">Online</div></div>
-        </div>
-        <div class="card p-4 text-xs text-brand-muted leading-relaxed">
-          Gerencie grupos, canais, membros e a aparência do site. Tudo é salvo automaticamente no navegador. Use Backup para exportar/importar.
-        </div>
-      </div>
-
-      <!-- Grupos Admin -->
-      <div id="atab-grupos" class="atab hidden">
-        <div class="flex items-center justify-between mb-4">
-          <h2 class="font-black text-lg">Grupos</h2>
-          <button onclick="openForm('grupo')" class="btn-red text-xs"><i class="fa-solid fa-plus mr-1"></i> Novo</button>
-        </div>
-        <div id="admin-list-g" class="space-y-2"></div>
-      </div>
-
-      <!-- Canais Admin -->
-      <div id="atab-canais" class="atab hidden">
-        <div class="flex items-center justify-between mb-4">
-          <h2 class="font-black text-lg">Canais</h2>
-          <button onclick="openForm('canal')" class="btn-red text-xs"><i class="fa-solid fa-plus mr-1"></i> Novo</button>
-        </div>
-        <div id="admin-list-c" class="space-y-2"></div>
-      </div>
-
-      <!-- Membros Admin -->
-      <div id="atab-membros" class="atab hidden">
-        <div class="flex items-center justify-between mb-4">
-          <h2 class="font-black text-lg">Membros</h2>
-          <button onclick="openForm('membro')" class="btn-red text-xs"><i class="fa-solid fa-plus mr-1"></i> Novo</button>
-        </div>
-        <div id="admin-list-m" class="space-y-2"></div>
-      </div>
-
-      <!-- Aparência -->
-      <div id="atab-aparencia" class="atab hidden">
-        <h2 class="font-black text-lg mb-4">Aparência</h2>
-        <div class="space-y-3 max-w-md">
-          <div><label class="text-[10px] uppercase font-bold text-brand-muted block mb-1">Título</label><input id="cfg-titulo" type="text"></div>
-          <div><label class="text-[10px] uppercase font-bold text-brand-muted block mb-1">Slogan</label><textarea id="cfg-slogan" rows="2"></textarea></div>
-          <div><label class="text-[10px] uppercase font-bold text-brand-muted block mb-1">Logo URL</label><input id="cfg-logo" type="url" placeholder="https://..."></div>
-          <div><label class="text-[10px] uppercase font-bold text-brand-muted block mb-1">WhatsApp</label><input id="cfg-wa" type="url"></div>
-          <div><label class="text-[10px] uppercase font-bold text-brand-muted block mb-1">Telegram</label><input id="cfg-tg" type="url"></div>
-          <button onclick="saveAparencia()" class="btn-red">Salvar</button>
-        </div>
-      </div>
-
-      <!-- Config -->
-      <div id="atab-config" class="atab hidden">
-        <h2 class="font-black text-lg mb-4">Configurações</h2>
-        <div class="card p-4 text-sm text-brand-muted">
-          <p class="mb-2">Senha do painel: <strong class="text-white">antirkk2026</strong></p>
-          <p class="text-xs">A senha é verificada no navegador. Para produção real, use um backend com autenticação segura.</p>
-        </div>
-      </div>
-
-      <!-- Backup -->
-      <div id="atab-backup" class="atab hidden">
-        <h2 class="font-black text-lg mb-4">Backup</h2>
-        <div class="flex flex-wrap gap-2">
-          <button onclick="exportData()" class="btn-outline text-xs"><i class="fa-solid fa-download mr-1"></i> Exportar</button>
-          <button onclick="document.getElementById('imp').click()" class="btn-outline text-xs"><i class="fa-solid fa-upload mr-1"></i> Importar</button>
-          <input type="file" id="imp" accept=".json" class="hidden" onchange="importData(event)">
-          <button onclick="if(confirm('Apagar tudo?')){localStorage.removeItem(KEY);location.reload()}" class="text-xs text-red-400 border border-red-500/30 px-3 py-2 rounded-xl">Limpar dados</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ==================== MODAL AUTH ==================== -->
-<div id="modal-auth" class="modal-bg hidden">
-  <div class="modal-box text-center">
-    <div class="w-14 h-14 mx-auto rounded-xl border border-brand-red overflow-hidden mb-3 bg-black flex items-center justify-center">
-      <span class="text-brand-red font-black text-xl">R</span>
-    </div>
-    <h3 class="font-black text-lg mb-1">Acesso Restrito</h3>
-    <p class="text-xs text-brand-muted mb-4">Digite a senha de administrador</p>
-    <form onsubmit="return doLogin(event)" class="space-y-3">
-      <input type="password" id="auth-pass" placeholder="Senha" class="text-center tracking-widest">
-      <p id="auth-err" class="text-xs text-red-400 hidden">Senha incorreta</p>
-      <button type="submit" class="btn-red w-full">Entrar</button>
-      <button type="button" onclick="closeModal('modal-auth')" class="text-xs text-brand-muted">Cancelar</button>
-    </form>
-  </div>
-</div>
-
-<!-- ==================== MODAL FORM ==================== -->
-<div id="modal-form" class="modal-bg hidden">
-  <div class="modal-box">
-    <div class="flex justify-between items-center mb-4">
-      <h3 class="font-black" id="form-title">Novo</h3>
-      <button onclick="closeModal('modal-form')" class="text-brand-muted"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <form onsubmit="return saveForm(event)" class="space-y-3">
-      <input type="hidden" id="f-id">
-      <input type="hidden" id="f-tipo">
-      <div id="f-fields"></div>
-      <div class="flex gap-2 pt-2">
-        <button type="submit" class="btn-red flex-1">Salvar</button>
-        <button type="button" onclick="closeModal('modal-form')" class="btn-outline">Cancelar</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<script>
-const PASS = 'antirkk2026';
-const KEY = 'rhs_v3';
-const DEF = {
-  grupos: [], canais: [], membros: [],
-  config: {
-    titulo: 'R.H.S',
-    slogan: 'Uma aliança construída por união, respeito e lealdade.',
-    logo: '303917.jpg',
-    wa: 'https://whatsapp.com',
-    tg: 'https://telegram.org'
-  }
-};
-
-let D = load();
-let isAdmin = sessionStorage.getItem('rhs_adm') === '1';
-let curPage = 'inicio';
-let prevPage = 'inicio';
-let filterG = 'ALL', filterC = 'ALL', filterM = 'ALL';
-
-function load() {
-  try {
-    const r = localStorage.getItem(KEY);
-    if (r) { const p = JSON.parse(r); return { ...DEF, ...p, config: { ...DEF.config, ...(p.config||{}) } }; }
-  } catch(e){}
-  return JSON.parse(JSON.stringify(DEF));
-}
-function save() { localStorage.setItem(KEY, JSON.stringify(D)); apply(); }
-function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
-function esc(s) { return s ? String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : ''; }
-function toast(msg) {
-  const t = document.createElement('div'); t.className = 'toast-box'; t.textContent = msg;
-  document.getElementById('toasts').appendChild(t); setTimeout(() => t.remove(), 2800);
+body{
+  margin:0;
+  background:var(--black);
+  color:var(--white);
+  font-family:Arial,Helvetica,sans-serif;
+  overflow-x:hidden;
 }
 
-/* Nav */
-function goPage(p) {
-  prevPage = curPage; curPage = p;
-  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
-  document.getElementById('page-' + p).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(el => {
-    el.classList.toggle('active', el.dataset.page === p);
-  });
-  if (p === 'grupos') renderGrupos();
-  if (p === 'canais') renderCanais();
-  if (p === 'membros') renderMembros();
-  if (p === 'inicio') renderInicio();
-  window.scrollTo(0,0);
-}
-function goBack() { goPage(prevPage || 'inicio'); }
-
-/* Filters */
-function setFilter(type, f, btn) {
-  if (type === 'g') filterG = f; else filterC = f;
-  btn.parentElement.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  if (type === 'g') renderGrupos(); else renderCanais();
-}
-function setMemberFilter(f, btn) {
-  filterM = f;
-  btn.parentElement.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderMembros();
+body,
+button,
+input{
+  font-family:Arial,Helvetica,sans-serif;
 }
 
-/* Cards */
-function itemCard(item, tipo) {
-  const online = item.online !== false;
-  const foto = item.foto || '';
-  const icon = tipo === 'grupo'
-    ? (item.icon || 'fa-users')
-    : (item.icon || 'fa-bullhorn');
-  return `
-  <div class="card p-3.5 flex gap-3 items-center cursor-pointer" onclick="openDetail('${tipo}','${item.id}')">
-    <div class="w-12 h-12 rounded-xl overflow-hidden bg-black border border-brand-border flex items-center justify-center shrink-0">
-      ${foto ? `<img src="${esc(foto)}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<i class=\\'fa-solid ${icon} text-brand-red\\'></i>'">` : `<i class="fa-solid ${icon} text-brand-red"></i>`}
-    </div>
-    <div class="flex-1 min-w-0">
-      <div class="font-bold text-sm truncate">${esc(item.nome)}</div>
-      <div class="${online ? 'badge-online' : 'badge-offline'} my-0.5">${online ? 'ONLINE' : 'OFFLINE'}</div>
-      <div class="text-[11px] text-brand-muted truncate">${esc(item.descricao || item.categoria || '')}</div>
-      <div class="text-[10px] text-brand-muted mt-0.5"><i class="fa-solid fa-users mr-1"></i>${item.membros || 0} membros</div>
-    </div>
-    <div class="shrink-0">
-      <span class="btn-red text-[10px] px-3 py-1.5">${tipo === 'grupo' ? 'ENTRAR' : 'ACESSAR'}</span>
-    </div>
-  </div>`;
+button,
+input{
+  outline:none;
 }
 
-function renderInicio() {
-  const g = D.grupos.filter(x => x.ativo !== false);
-  const c = D.canais.filter(x => x.ativo !== false);
-  const online = g.filter(x => x.online !== false).length + c.filter(x => x.online !== false).length;
-  document.getElementById('st-grupos').textContent = g.length;
-  document.getElementById('st-canais').textContent = c.length;
-  document.getElementById('st-online').textContent = online;
-  document.getElementById('st-membros').textContent = D.membros.length;
-  document.getElementById('preview-g-count').textContent = g.length;
-  document.getElementById('preview-grupos').innerHTML = g.slice(0,3).map(i => itemCard(i,'grupo')).join('') || '<p class="text-center text-brand-muted text-xs py-6">Nenhum grupo ainda</p>';
-}
-function renderGrupos() {
-  const q = (document.getElementById('search-g')?.value || '').toLowerCase();
-  let list = D.grupos.filter(x => x.ativo !== false);
-  if (q) list = list.filter(x => x.nome.toLowerCase().includes(q) || (x.categoria||'').toLowerCase().includes(q));
-  if (filterG === 'VIP') list = list.filter(x => (x.categoria||'').toUpperCase().includes('VIP'));
-  if (filterG === 'RECENT') list = [...list].sort((a,b) => (b.created||'').localeCompare(a.created||''));
-  document.getElementById('list-grupos').innerHTML = list.map(i => itemCard(i,'grupo')).join('') || '<p class="text-center text-brand-muted text-xs py-8">Nenhum grupo</p>';
-  document.getElementById('count-g').textContent = list.length;
-}
-function renderCanais() {
-  const q = (document.getElementById('search-c')?.value || '').toLowerCase();
-  let list = D.canais.filter(x => x.ativo !== false);
-  if (q) list = list.filter(x => x.nome.toLowerCase().includes(q));
-  if (filterC === 'VIP') list = list.filter(x => (x.categoria||'').toUpperCase().includes('VIP'));
-  if (filterC === 'RECENT') list = [...list].sort((a,b) => (b.created||'').localeCompare(a.created||''));
-  document.getElementById('list-canais').innerHTML = list.map(i => itemCard(i,'canal')).join('') || '<p class="text-center text-brand-muted text-xs py-8">Nenhum canal</p>';
-  document.getElementById('count-c').textContent = list.length;
-}
-function renderMembros() {
-  let list = D.membros;
-  if (filterM === 'FOUNDER') list = list.filter(m => (m.cargo||'').toUpperCase().includes('FOUNDER') || (m.cargo||'').toUpperCase().includes('FUNDADOR'));
-  if (filterM === 'ADMIN') list = list.filter(m => (m.cargo||'').toUpperCase().includes('ADMIN') || (m.cargo||'').toUpperCase().includes('MOD'));
-  document.getElementById('list-membros').innerHTML = list.map(m => `
-    <div class="card p-4 text-center">
-      <div class="w-16 h-16 mx-auto rounded-full overflow-hidden border-2 border-brand-red/40 mb-2 bg-black">
-        <img src="${esc(m.foto)||'https://placehold.co/64x64/121216/ff0033?text=?'}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/64x64/121216/ff0033?text=?'">
-      </div>
-      <div class="font-bold text-sm">${esc(m.nome)}</div>
-      <div class="text-[10px] text-brand-red font-semibold mt-0.5">${esc(m.cargo||'Membro')}</div>
-    </div>
-  `).join('') || '<p class="col-span-2 text-center text-brand-muted text-xs py-8">Nenhum membro</p>';
-  document.getElementById('count-m').textContent = list.length;
+a{
+  color:inherit;
+  text-decoration:none;
 }
 
-function openDetail(tipo, id) {
-  const list = tipo === 'grupo' ? D.grupos : D.canais;
-  const item = list.find(x => x.id === id); if (!item) return;
-  document.getElementById('det-foto').src = item.foto || '';
-  document.getElementById('det-foto').style.display = item.foto ? '' : 'none';
-  document.getElementById('det-status').innerHTML = item.online !== false ? '<span class="badge-online">ONLINE</span>' : '<span class="badge-offline">OFFLINE</span>';
-  document.getElementById('det-nome').textContent = item.nome;
-  document.getElementById('det-desc').textContent = item.descricao || '';
-  document.getElementById('det-membros').textContent = item.membros || 0;
-  document.getElementById('det-cat').textContent = item.categoria || '';
-  document.getElementById('det-link').href = item.link || '#';
-  document.getElementById('det-link').textContent = tipo === 'grupo' ? 'ENTRAR NO GRUPO' : 'ACESSAR CANAL';
-  document.getElementById('det-info-cat').textContent = item.categoria || '—';
-  document.getElementById('det-info-status').innerHTML = item.online !== false ? '<span class="badge-online">Online</span>' : '<span class="badge-offline">Offline</span>';
-  document.getElementById('det-info-link').textContent = item.link || '—';
-  goPage('detail');
+img{
+  max-width:100%;
 }
 
-/* Admin */
-function openAdmin() {
-  if (isAdmin) { document.getElementById('admin-view').classList.remove('hidden'); adminTab('dash'); return; }
-  document.getElementById('modal-auth').classList.remove('hidden');
-  document.getElementById('auth-pass').value = '';
-  document.getElementById('auth-err').classList.add('hidden');
-}
-function closeAdmin() { document.getElementById('admin-view').classList.add('hidden'); }
-function doLogin(e) {
-  e.preventDefault();
-  if (document.getElementById('auth-pass').value === PASS) {
-    isAdmin = true; sessionStorage.setItem('rhs_adm','1');
-    closeModal('modal-auth'); document.getElementById('admin-view').classList.remove('hidden');
-    adminTab('dash'); toast('Login ok');
-  } else document.getElementById('auth-err').classList.remove('hidden');
-  return false;
-}
-function logout() { isAdmin = false; sessionStorage.removeItem('rhs_adm'); closeAdmin(); toast('Saiu'); }
-function adminTab(t) {
-  document.querySelectorAll('.atab').forEach(el => el.classList.add('hidden'));
-  document.getElementById('atab-' + t).classList.remove('hidden');
-  document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === t));
-  if (t === 'dash') {
-    document.getElementById('ad-g').textContent = D.grupos.length;
-    document.getElementById('ad-c').textContent = D.canais.length;
-    document.getElementById('ad-m').textContent = D.membros.length;
-    document.getElementById('ad-on').textContent = D.grupos.filter(x=>x.online!==false).length + D.canais.filter(x=>x.online!==false).length;
-  }
-  if (t === 'grupos') renderAdminList('grupo');
-  if (t === 'canais') renderAdminList('canal');
-  if (t === 'membros') renderAdminList('membro');
-  if (t === 'aparencia') fillAparencia();
-}
-function renderAdminList(tipo) {
-  const map = { grupo: ['grupos','admin-list-g'], canal: ['canais','admin-list-c'], membro: ['membros','admin-list-m'] };
-  const [key, elId] = map[tipo];
-  const list = D[key];
-  document.getElementById(elId).innerHTML = list.map(item => `
-    <div class="card p-3 flex items-center gap-3">
-      <div class="w-10 h-10 rounded-lg bg-black border border-brand-border overflow-hidden flex items-center justify-center shrink-0">
-        ${item.foto ? `<img src="${esc(item.foto)}" class="w-full h-full object-cover">` : `<i class="fa-solid fa-user text-brand-muted text-xs"></i>`}
-      </div>
-      <div class="flex-1 min-w-0">
-        <div class="font-bold text-sm truncate">${esc(item.nome)}</div>
-        <div class="text-[10px] text-brand-muted">${esc(item.categoria || item.cargo || '')} ${item.online === false ? '• Offline' : ''}</div>
-      </div>
-      <button onclick="openForm('${tipo}','${item.id}')" class="text-xs text-brand-red font-semibold">Editar</button>
-      <button onclick="delItem('${tipo}','${item.id}')" class="text-xs text-red-400 font-semibold">Excluir</button>
-    </div>
-  `).join('') || '<p class="text-brand-muted text-xs text-center py-6">Vazio</p>';
+button{
+  cursor:pointer;
 }
 
-function openForm(tipo, id) {
-  document.getElementById('f-tipo').value = tipo;
-  document.getElementById('f-id').value = id || '';
-  document.getElementById('form-title').textContent = id ? 'Editar' : 'Novo ' + (tipo === 'grupo' ? 'Grupo' : tipo === 'canal' ? 'Canal' : 'Membro');
-  let fields = '';
-  if (tipo === 'membro') {
-    const m = id ? D.membros.find(x => x.id === id) : {};
-    fields = `
-      <div><label class="text-[10px] uppercase font-bold text-brand-muted">Nome *</label><input id="f-nome" required value="${esc(m?.nome||'')}"></div>
-      <div><label class="text-[10px] uppercase font-bold text-brand-muted">Cargo</label><input id="f-cargo" value="${esc(m?.cargo||'')}" placeholder="Founder, Admin..."></div>
-      <div><label class="text-[10px] uppercase font-bold text-brand-muted">Foto URL</label><input id="f-foto" value="${esc(m?.foto||'')}"></div>`;
-  } else {
-    const list = tipo === 'grupo' ? D.grupos : D.canais;
-    const item = id ? list.find(x => x.id === id) : {};
-    fields = `
-      <div><label class="text-[10px] uppercase font-bold text-brand-muted">Link</label><input id="f-link" value="${esc(item?.link||'')}" placeholder="https://t.me/..."></div>
-      <div><label class="text-[10px] uppercase font-bold text-brand-muted">Nome *</label><input id="f-nome" required value="${esc(item?.nome||'')}"></div>
-      <div><label class="text-[10px] uppercase font-bold text-brand-muted">Descrição</label><textarea id="f-desc" rows="2">${esc(item?.descricao||'')}</textarea></div>
-      <div><label class="text-[10px] uppercase font-bold text-brand-muted">Foto URL</label><input id="f-foto" value="${esc(item?.foto||'')}"></div>
-      <div><label class="text-[10px] uppercase font-bold text-brand-muted">Categoria</label><input id="f-cat" value="${esc(item?.categoria||'')}" placeholder="VIP, Geral..."></div>
-      <div><label class="text-[10px] uppercase font-bold text-brand-muted">Nº Membros</label><input id="f-membros" type="number" value="${item?.membros||0}"></div>
-      <div class="flex gap-4">
-        <label class="flex items-center gap-2 text-sm"><input type="checkbox" id="f-online" ${item?.online !== false ? 'checked' : ''}> Online</label>
-        <label class="flex items-center gap-2 text-sm"><input type="checkbox" id="f-ativo" ${item?.ativo !== false ? 'checked' : ''}> Ativo</label>
-      </div>`;
-  }
-  document.getElementById('f-fields').innerHTML = fields;
-  document.getElementById('modal-form').classList.remove('hidden');
-}
-function saveForm(e) {
-  e.preventDefault();
-  const tipo = document.getElementById('f-tipo').value;
-  const id = document.getElementById('f-id').value || uid();
-  if (tipo === 'membro') {
-    const m = { id, nome: document.getElementById('f-nome').value.trim(), cargo: document.getElementById('f-cargo').value.trim(), foto: document.getElementById('f-foto').value.trim() };
-    const idx = D.membros.findIndex(x => x.id === id);
-    if (idx >= 0) D.membros[idx] = m; else D.membros.push(m);
-  } else {
-    const item = {
-      id, nome: document.getElementById('f-nome').value.trim(),
-      descricao: document.getElementById('f-desc').value.trim(),
-      link: document.getElementById('f-link').value.trim(),
-      foto: document.getElementById('f-foto').value.trim(),
-      categoria: document.getElementById('f-cat').value.trim(),
-      membros: parseInt(document.getElementById('f-membros').value) || 0,
-      online: document.getElementById('f-online').checked,
-      ativo: document.getElementById('f-ativo').checked,
-      created: new Date().toISOString()
-    };
-    const key = tipo === 'grupo' ? 'grupos' : 'canais';
-    const idx = D[key].findIndex(x => x.id === id);
-    if (idx >= 0) D[key][idx] = { ...D[key][idx], ...item }; else D[key].push(item);
-  }
-  save(); closeModal('modal-form');
-  if (tipo === 'grupo') renderAdminList('grupo');
-  if (tipo === 'canal') renderAdminList('canal');
-  if (tipo === 'membro') renderAdminList('membro');
-  toast('Salvo');
-  return false;
-}
-function delItem(tipo, id) {
-  if (!confirm('Excluir?')) return;
-  if (tipo === 'grupo') D.grupos = D.grupos.filter(x => x.id !== id);
-  else if (tipo === 'canal') D.canais = D.canais.filter(x => x.id !== id);
-  else D.membros = D.membros.filter(x => x.id !== id);
-  save(); renderAdminList(tipo); toast('Excluído');
+/* =========================================================
+   MAIN APP
+   ========================================================= */
+
+.rhs-app{
+  min-height:100vh;
+  background:
+    radial-gradient(
+      circle at 50% -20%,
+      rgba(229,9,20,.16),
+      transparent 38%
+    ),
+    linear-gradient(
+      180deg,
+      #050505 0%,
+      #030303 100%
+    );
 }
 
-function fillAparencia() {
-  const c = D.config;
-  document.getElementById('cfg-titulo').value = c.titulo || '';
-  document.getElementById('cfg-slogan').value = c.slogan || '';
-  document.getElementById('cfg-logo').value = c.logo || '';
-  document.getElementById('cfg-wa').value = c.wa || '';
-  document.getElementById('cfg-tg').value = c.tg || '';
-}
-function saveAparencia() {
-  D.config.titulo = document.getElementById('cfg-titulo').value.trim() || 'R.H.S';
-  D.config.slogan = document.getElementById('cfg-slogan').value.trim();
-  const logo = document.getElementById('cfg-logo').value.trim(); if (logo) D.config.logo = logo;
-  D.config.wa = document.getElementById('cfg-wa').value.trim();
-  D.config.tg = document.getElementById('cfg-tg').value.trim();
-  save(); toast('Aparência salva');
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.rhs-header{
+  position:sticky;
+  top:0;
+  z-index:1000;
+
+  height:74px;
+
+  background:
+    rgba(4,4,4,.92);
+
+  border-bottom:1px solid #17191b;
+
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
 }
 
-function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+.rhs-header-inner{
+  width:min(1280px,94%);
+  height:100%;
+  margin:auto;
 
-function apply() {
-  const c = D.config;
-  document.getElementById('hero-slogan').textContent = c.slogan || '';
-  document.getElementById('btn-wa').href = c.wa || '#';
-  document.getElementById('btn-tg').href = c.tg || '#';
-  const logo = c.logo || '303917.jpg';
-  ['hdr-logo','hero-logo'].forEach(id => { const el = document.getElementById(id); if (el) el.src = logo; });
-  renderInicio();
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
 }
 
-function exportData() {
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([JSON.stringify(D,null,2)], {type:'application/json'}));
-  a.download = 'aliance-rhs-backup.json'; a.click(); toast('Exportado');
-}
-function importData(e) {
-  const f = e.target.files[0]; if (!f) return;
-  const r = new FileReader();
-  r.onload = () => { try { D = { ...DEF, ...JSON.parse(r.result), config: { ...DEF.config, ...(JSON.parse(r.result).config||{}) } }; save(); toast('Importado'); } catch(err) { toast('Arquivo inválido'); } };
-  r.readAsText(f);
+/* BRAND */
+
+.rhs-brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
 }
 
-document.addEventListener('DOMContentLoaded', () => { apply(); });
-</script>
-</body>
-</html>
+.rhs-brand-logo{
+  width:42px;
+  height:42px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:11px;
+
+  border:1px solid rgba(229,9,20,.5);
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(229,9,20,.12),
+      transparent 65%
+    ),
+    #070707;
+
+  box-shadow:
+    0 0 25px rgba(229,9,20,.09);
+}
+
+.rhs-brand-logo img{
+  width:29px;
+  height:29px;
+  object-fit:contain;
+}
+
+.rhs-brand-text{
+  display:flex;
+  flex-direction:column;
+  line-height:1;
+}
+
+.rhs-brand-title{
+  font-size:13px;
+  font-weight:900;
+  letter-spacing:.4px;
+}
+
+.rhs-brand-title span{
+  color:var(--red);
+}
+
+.rhs-brand-sub{
+  margin-top:5px;
+
+  color:#555;
+
+  font-size:7px;
+  font-weight:800;
+
+  letter-spacing:2px;
+  text-transform:uppercase;
+}
+
+/* DESKTOP NAV */
+
+.rhs-desktop-nav{
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+
+.rhs-desktop-nav a{
+  padding:10px 13px;
+
+  border-radius:7px;
+
+  color:#686868;
+
+  font-size:8px;
+  font-weight:900;
+
+  letter-spacing:1px;
+  text-transform:uppercase;
+
+  transition:.2s;
+}
+
+.rhs-desktop-nav a:hover,
+.rhs-desktop-nav a.active{
+  color:#fff;
+  background:#111315;
+}
+
+.rhs-desktop-nav a.active{
+  box-shadow:
+    inset 0 -2px 0 var(--red);
+}
+
+/* HEADER ACTION */
+
+.rhs-header-admin{
+  display:flex;
+  align-items:center;
+  gap:9px;
+}
+
+.rhs-admin-button{
+  display:flex;
+  align-items:center;
+  gap:7px;
+
+  padding:10px 13px;
+
+  border:1px solid #292c30;
+  border-radius:8px;
+
+  background:#0b0c0d;
+
+  color:#aaa;
+
+  font-size:8px;
+  font-weight:900;
+
+  letter-spacing:1px;
+  text-transform:uppercase;
+
+  transition:.2s;
+}
+
+.rhs-admin-button:hover{
+  color:#fff;
+  border-color:#444;
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.rhs-hero{
+  position:relative;
+
+  min-height:610px;
+
+  overflow:hidden;
+
+  border-bottom:1px solid #121416;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  text-align:center;
+}
+
+/* BACKGROUND */
+
+.rhs-hero-bg{
+  position:absolute;
+  inset:0;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0,0,0,.25),
+      #030303 92%
+    ),
+    radial-gradient(
+      circle at 50% 20%,
+      rgba(229,9,20,.18),
+      transparent 32%
+    );
+}
+
+.rhs-hero-grid{
+  position:absolute;
+  inset:0;
+
+  opacity:.11;
+
+  background-image:
+    linear-gradient(
+      rgba(255,255,255,.05) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,.05) 1px,
+      transparent 1px
+    );
+
+  background-size:60px 60px;
+
+  mask-image:
+    linear-gradient(
+      to bottom,
+      #000,
+      transparent 88%
+    );
+}
+
+.rhs-hero-red{
+  position:absolute;
+
+  width:550px;
+  height:550px;
+
+  left:50%;
+  top:-350px;
+
+  transform:translateX(-50%);
+
+  border-radius:50%;
+
+  background:rgba(229,9,20,.12);
+
+  filter:blur(90px);
+}
+
+/* SIDE LINES */
+
+.rhs-side-line{
+  position:absolute;
+
+  top:80px;
+
+  width:1px;
+  height:350px;
+
+  background:
+    linear-gradient(
+      transparent,
+      rgba(229,9,20,.55),
+      transparent
+    );
+}
+
+.rhs-side-line.left{
+  left:7%;
+}
+
+.rhs-side-line.right{
+  right:7%;
+}
+
+/* HERO CONTENT */
+
+.rhs-hero-content{
+  position:relative;
+  z-index:5;
+
+  width:min(900px,92%);
+
+  padding:100px 0 70px;
+}
+
+/* OFFICIAL */
+
+.rhs-official{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+
+  padding:7px 11px;
+
+  border:1px solid rgba(229,9,20,.35);
+  border-radius:20px;
+
+  background:rgba(229,9,20,.07);
+
+  color:#e8e8e8;
+
+  font-size:7px;
+  font-weight:900;
+
+  letter-spacing:2px;
+  text-transform:uppercase;
+}
+
+.rhs-official-dot{
+  width:6px;
+  height:6px;
+
+  border-radius:50%;
+
+  background:var(--red);
+
+  box-shadow:
+    0 0 10px var(--red);
+}
+
+/* HERO LOGO */
+
+.rhs-hero-logo{
+  width:125px;
+  height:125px;
+
+  margin:25px auto 20px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:35px;
+
+  border:1px solid rgba(229,9,20,.5);
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(229,9,20,.18),
+      transparent 68%
+    ),
+    #070707;
+
+  box-shadow:
+    0 0 50px rgba(229,9,20,.12),
+    inset 0 0 35px rgba(229,9,20,.05);
+
+  transform:rotate(-1deg);
+}
+
+.rhs-hero-logo img{
+  width:92px;
+  height:92px;
+
+  object-fit:contain;
+
+  filter:
+    drop-shadow(
+      0 0 18px
+      rgba(229,9,20,.25)
+    );
+}
+
+/* TITLE */
+
+.rhs-hero-title{
+  margin:0;
+
+  font-size:
+    clamp(
+      48px,
+      10vw,
+      105px
+    );
+
+  line-height:.82;
+
+  font-weight:950;
+
+  letter-spacing:-7px;
+
+  text-transform:uppercase;
+}
+
+.rhs-hero-title .light{
+  color:#eee;
+}
+
+.rhs-hero-title .red{
+  color:var(--red);
+}
+
+/* SUBTITLE */
+
+.rhs-hero-description{
+  width:min(570px,90%);
+
+  margin:24px auto 0;
+
+  color:#777;
+
+  font-size:11px;
+
+  line-height:1.8;
+}
+
+.rhs-hero-description strong{
+  color:#bbb;
+}
+
+/* HERO BUTTONS */
+
+.rhs-hero-buttons{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+
+  margin-top:28px;
+
+  flex-wrap:wrap;
+}
+
+.rhs-hero-btn{
+  min-width:150px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+
+  padding:13px 18px;
+
+  border-radius:8px;
+
+  font-size:8px;
+  font-weight:900;
+
+  letter-spacing:1px;
+  text-transform:uppercase;
+
+  transition:.22s;
+}
+
+.rhs-hero-btn.primary{
+  background:var(--red);
+
+  color:#fff;
+
+  box-shadow:
+    0 12px 35px
+    rgba(229,9,20,.2);
+}
+
+.rhs-hero-btn.primary:hover{
+  background:var(--red2);
+  transform:translateY(-2px);
+}
+
+.rhs-hero-btn.secondary{
+  border:1px solid #292c30;
+
+  background:#0a0b0c;
+
+  color:#aaa;
+}
+
+.rhs-hero-btn.secondary:hover{
+  color:#fff;
+  border-color:#4a4d50;
+}
+
+/* =========================================================
+   QUICK INFO
+   ========================================================= */
+
+.rhs-quick{
+  width:min(1120px,92%);
+
+  margin:-34px auto 0;
+
+  position:relative;
+  z-index:10;
